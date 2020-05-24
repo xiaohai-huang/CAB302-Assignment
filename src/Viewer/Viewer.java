@@ -1,17 +1,21 @@
 package Viewer;
 
+ import org.xml.sax.SAXException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.util.Base64;
 
-public class Viewer implements Runnable{
+public class Viewer implements Runnable {
     protected final JFrame viewer;
     private final Dimension screenSize;
 
@@ -22,9 +26,9 @@ public class Viewer implements Runnable{
         viewer.setUndecorated(true);
         viewer.setSize(screenSize);
 
-        // loads the image
-        BufferedImage rawImage = getImageSource();
-        ImagePanel img = new ImagePanel(rawImage, 300,300,300,300);
+        // loads the content to be displayed
+        String xml = ReadTextFile("xml/billboards/15.xml");
+        DisplayPanel content = new DisplayPanel(xml);
 
         // handle ESC press, exit the program
         viewer.addKeyListener(new KeyAdapter() {
@@ -56,58 +60,130 @@ public class Viewer implements Runnable{
         viewer.getContentPane().setCursor(blankCursor);
 
         // displays the content
-        viewer.getContentPane().add(img);
+        viewer.getContentPane().add(content);
         viewer.setVisible(true);
     }
 
-    /**
-     * Returns the image source which will be displayed.
-     * This method can be overridden, when the class needs to  act like a previewer
-     * @return an image to be displayed
-     */
-    public BufferedImage getImageSource()
-    {
-        BufferedImage img = null;
-        try {
-             img =  ImageIO.read(new File("billboard.jpg"));
-        }
-        catch (IOException ignore){}
-        return img;
-    }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
         javax.swing.SwingUtilities.invokeLater(new Viewer());
+//        String xml = ReadTextFile("xml/billboards/16.xml");
+//        BillboardXML XML = new BillboardXML(xml);
+//        System.out.println(XML.getPictureData());
+//        BufferedImage image = decodeImage(XML.getPictureData());
+//        //ImageIO.write(image,"jpg", new File("xiaohai.jpg"));
+//        JFrame f = new JFrame();
+//        JPanel panel = new JPanel(){
+//            @Override
+//            protected void paintComponent(Graphics g) {
+//                g.drawImage(image,0,0,null);
+//            }
+//        };
+//        f.getContentPane().add(panel);
+//        f.setVisible(true);
     }
 
     @Override
     public void run() {
         new Viewer();
     }
+
+    // from https://grokonez.com/java/java-advanced/java-8-encode-decode-an-image-base64
+    public static String encodeImage(BufferedImage image) {
+        String base64Image = "";
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "jpg", bos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] data = bos.toByteArray();
+
+        base64Image = Base64.getEncoder().encodeToString(data);
+
+        return base64Image;
+    }
+
+    public static BufferedImage decodeImage(String base64Image) {
+        // Converting a Base64 String into Image byte array
+        byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(bis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image;
+    }
+
+    public static String ReadTextFile(String filePath) {
+        String everything = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            everything = sb.toString();
+            br.close();
+
+        } catch (IOException e) {
+            System.out.println("IO exception!");
+        }
+        return everything;
+    }
 }
 
-class ImagePanel extends JPanel {
-    private final int x0;
-    private final int x1;
-    private final int y0;
-    private final int y1;
-    private BufferedImage image;
+class DisplayPanel extends JPanel {
 
-    public ImagePanel(BufferedImage image,int x,int y,int width,int height) {
-        this.image = image;
-        this.x0 = x;
-        this.x1 = width;
-        this.y0 = y;
-        this.y1 = height;
+    private BillboardXML XML;
 
+    public DisplayPanel(String xml) {
+        this.XML = new BillboardXML(xml);
     }
 
     /**
-     * Draws the image on the panel
+     * Draws the content on the panel
+     *
      * @param g
      */
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, x0, y0,x1,y1, null);
+        // handle error
+        if (XML.isHasError()) {
+            try {
+                BufferedImage errorImage = ImageIO.read(new URL(XML.getPictureURL()));
+                g.drawImage(errorImage, 0, 0, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        // loads image if exists
+        BufferedImage image = null;
+        if (XML.isHasPicture()) {
+            // loads image from url
+            if (XML.getPictureURL() != null) {
+                try {
+                    image = ImageIO.read(new URL(XML.getPictureURL()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else { // loads base 64 image
+                image = Viewer.decodeImage(XML.getPictureData());
+            }
+        }
+
+        g.drawImage(image, 0, 0, null);
     }
+
+
 }

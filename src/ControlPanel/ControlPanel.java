@@ -49,7 +49,7 @@ public class ControlPanel extends JFrame {
 
         this.setSize(new Dimension(WIDTH, HEIGHT));
         this.setLocationRelativeTo(null);
-        this.getContentPane().add(new ControlPanelUI().getMainTabPanel());
+
         this.setVisible(true);
     }
 
@@ -69,6 +69,8 @@ public class ControlPanel extends JFrame {
 
 
     public static void main(String[] args) {
-        new ControlPanel();
+        String password = "xiaohai520";
+        System.out.println(password.hashCode());
+        //new ControlPanel();
     }
 }
