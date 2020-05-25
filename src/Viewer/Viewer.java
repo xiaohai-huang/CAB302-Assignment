@@ -1,10 +1,8 @@
 package Viewer;
 
-import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -58,7 +56,7 @@ public class Viewer implements Runnable {
 
 
         // loads the content to be displayed
-        String xml = ReadTextFile("xml/billboards/9.xml");
+        String xml = ReadTextFile("xml/billboards/12.xml");
         DisplayPanel content = new DisplayPanel(xml,screenSize);
 
         // displays the content
@@ -69,6 +67,7 @@ public class Viewer implements Runnable {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Viewer());
+        //new Viewer();
     }
 
     @Override
@@ -164,8 +163,6 @@ class DisplayPanel extends JPanel {
             return;
         }
 
-
-
         // loads image if exists
         BufferedImage image = null;
         if (XML.isHasPicture()) {
@@ -183,33 +180,36 @@ class DisplayPanel extends JPanel {
 
         // loads message if exists
         String message = null;
-        Color messageColour = null;
+        String messageColour = null;
         if (XML.isHasMessage()) {
             message = XML.getMessageContent();
-            messageColour = Color.decode(XML.getMessageColour());
+            messageColour = XML.getMessageColour();
         }
 
         // loads information
         String information = null;
-        Color informationColour = null;
+        String informationColour = null;
         if (XML.isHasInformation()) {
             information = XML.getInformationContent();
-            informationColour = Color.decode(XML.getInformationColour());
+            informationColour = XML.getInformationColour();
         }
 
 
         // only message is present
-        if(XML.isHasMessage() && (!XML.isHasPicture() || !XML.isHasInformation()))
+        if(XML.isHasMessage() && (!XML.isHasPicture() && !XML.isHasInformation()))
         {
             int fontSize = ((int)(screenSize.width/ message.length()/0.75)+2);
             String labelText = String.format("<html><h1 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h1></html>",
-                    1200,fontSize,messageColour, message);
+                    1200,fontSize,
+                    messageColour,
+                    message);
+
             JLabel msg = new JLabel(labelText);
             this.setLayout(new BorderLayout());
             this.add(msg,BorderLayout.CENTER);
         }
         // only picture is present
-        else if(XML.isHasPicture() && (!XML.isHasMessage() || !XML.isHasInformation()))
+        else if(XML.isHasPicture() && (!XML.isHasMessage() && !XML.isHasInformation()))
         {
             //the image should be scaled up to half the width and height of the screen and displayed in the centre.
             // screenSize = 1000 x 750           ==>  500 x 375   1:1.33
@@ -218,6 +218,95 @@ class DisplayPanel extends JPanel {
             Dimension imageSize = getImageAloneDimension(screenSize,new Dimension(image.getWidth(),image.getHeight()));
             Point centerDrawingPoint = getCenterDrawingPoint(screenSize,imageSize);
             g.drawImage(image,centerDrawingPoint.x,centerDrawingPoint.y,imageSize.width,imageSize.height,null);
+        }
+        // only information is present
+        else if(XML.isHasInformation() && (!XML.isHasMessage() && !XML.isHasPicture()))
+        {
+            int limitedWidth = (int)(0.75*screenSize.width);
+
+            int fontSize = (limitedWidth *5 +1000) / information.length() -1;
+            String infoText = String.format("<html><h3 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h3></html>",
+                    limitedWidth-345,fontSize,
+                    informationColour,
+                    information);
+            JLabel info = new JLabel(infoText);
+            this.setLayout(new GridBagLayout());
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            this.add(info);
+//            System.out.println( "actual width"+msg.getPreferredSize().getWidth());
+//            System.out.println("limited width"+limitedWidth);
+//            System.out.println();
+//            System.out.println("actual height"+ msg.getPreferredSize().getHeight());
+//            System.out.println("limited height"+limitedHeight);
+//            System.out.println();
+        }
+        // only message and picture are present
+        else if(XML.isHasMessage()&&XML.isHasPicture() &&!XML.isHasInformation())
+        {
+            int fontSize = ((int)(screenSize.width/ message.length()/0.75)+2);
+            String labelText = String.format("<html><h1 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h1></html>",
+                    1200,fontSize,
+                    messageColour,
+                    message);
+            this.setLayout(null);
+            JLabel msg = new JLabel(labelText);
+            msg.setBounds(0,50,screenSize.width,300);
+            this.add(msg);
+
+            // get new image size
+            Dimension imageSize = getImageAloneDimension(screenSize,new Dimension(image.getWidth(),image.getHeight()));
+            // it should be drawn in the middle of the bottom 2/3 of the screen.
+            Point drawingPoint = getBottomDrawingPoint(screenSize,imageSize);
+            // draw the image
+            g.drawImage(image,drawingPoint.x,drawingPoint.y,imageSize.width,imageSize.height,null);
+
+
+        }
+        // only message and information are present
+        else if(XML.isHasMessage()&&XML.isHasInformation() && !XML.isHasPicture())
+        {
+            int messageFontSize = ((int)(screenSize.width/ message.length()/0.75)+2);
+            String messageText = String.format("<html><h1 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h1></html>",
+                    1200,messageFontSize,
+                    messageColour,
+                    message);
+
+            JLabel msg = new JLabel(messageText);
+            this.add(msg);
+
+
+
+            int limitedWidth = (int)(0.75*screenSize.width);
+
+            int infoFontSize = (limitedWidth/ information.length())+25;
+            if(infoFontSize>messageFontSize)
+            {
+                infoFontSize = messageFontSize - 5;
+            }
+            String infoText = String.format("<html><h3 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h3></html>",
+                    limitedWidth-345,infoFontSize,
+                    informationColour,
+                    information);
+            JLabel info = new JLabel(infoText);
+            JPanel bottomPanel = new JPanel();
+            bottomPanel.setBackground(new Color(0,0,0,0));
+            bottomPanel.add(info);
+            this.add(bottomPanel);
+
+            this.setLayout(new GridLayout(2,1,10,100));
+
+
+
+        }
+        // only picture and information are present
+        else if(XML.isHasPicture()&&XML.isHasInformation()&&!XML.isHasMessage())
+        {
+
+        }
+        //  message, picture and information are all present
+        else if (XML.isHasMessage()&&XML.isHasInformation()&&XML.isHasPicture())
+        {
+
         }
 
     }
@@ -244,4 +333,11 @@ class DisplayPanel extends JPanel {
 
         return  leftUpPoint;
     }
+
+    private Point getBottomDrawingPoint(Dimension screenSize, Dimension imageSize){
+        Point bottomCenter = new Point(screenSize.width/2,(int)((double)(screenSize.height)*2/3));
+        Point leftUpPoint = new Point(bottomCenter.x-imageSize.width/2,bottomCenter.y-imageSize.height/2);
+        return leftUpPoint;
+    }
+
 }
