@@ -11,11 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class BillboardXML {
-    private String background = "#b8b2c2";// default colour
+    private String background = "#e5e3e8";// default colour
     /**
      * <message colour="#FFF00">
      */
-    private String messageColour = "#1f2630";
+    private String messageColour = "#191c21";
 
     private String messageContent;
 
