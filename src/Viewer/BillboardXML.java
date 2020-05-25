@@ -11,11 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class BillboardXML {
-    private String background = "#383242";// default colour
+    private String background = "#b8b2c2";// default colour
     /**
      * <message colour="#FFF00">
      */
-    private String messageColour = "#4b484f";
+    private String messageColour = "#1f2630";
 
     private String messageContent;
 
@@ -73,12 +73,23 @@ public class BillboardXML {
             return;
         }
 
-        Element backgroundTag = getTag(document,"billboard");
-        String background = backgroundTag.getAttribute("background");
+        // billboard tag
+        Element billboardTag = getTag(document,"billboard");
+        String background;
+        try {
+            background = billboardTag.getAttribute("background");
+        }
+        catch (NullPointerException e){
+            hasError = true;
+            pictureURL = errorPicture;
+            return;
+        }
+
         if(!background.isEmpty()){
             this.background = background;
         }
 
+        // message Tag
         Element messageTag = getTag(document,"message");
         if(messageTag!=null){
             String messageColour = messageTag.getAttribute("colour");
@@ -93,6 +104,7 @@ public class BillboardXML {
             hasMessage = false;
         }
 
+        // picture Tag
         Element pictureTag = getTag(document,"picture");
         if(pictureTag != null){
             String pictureURL = pictureTag.getAttribute("url");
@@ -119,6 +131,7 @@ public class BillboardXML {
             hasPicture = false;
         }
 
+        // information tag
         Element infoTag = getTag(document,"information");
         if(infoTag != null){
             String informationColour = infoTag.getAttribute("colour");

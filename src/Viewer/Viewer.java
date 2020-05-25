@@ -1,6 +1,6 @@
 package Viewer;
 
- import org.xml.sax.SAXException;
+import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,9 +26,6 @@ public class Viewer implements Runnable {
         viewer.setUndecorated(true);
         viewer.setSize(screenSize);
 
-        // loads the content to be displayed
-        String xml = ReadTextFile("xml/billboards/15.xml");
-        DisplayPanel content = new DisplayPanel(xml);
 
         // handle ESC press, exit the program
         viewer.addKeyListener(new KeyAdapter() {
@@ -59,28 +56,19 @@ public class Viewer implements Runnable {
         // Set the blank cursor to the viewer.
         viewer.getContentPane().setCursor(blankCursor);
 
+
+        // loads the content to be displayed
+        String xml = ReadTextFile("xml/billboards/9.xml");
+        DisplayPanel content = new DisplayPanel(xml,screenSize);
+
         // displays the content
         viewer.getContentPane().add(content);
         viewer.setVisible(true);
     }
 
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Viewer());
-//        String xml = ReadTextFile("xml/billboards/16.xml");
-//        BillboardXML XML = new BillboardXML(xml);
-//        System.out.println(XML.getPictureData());
-//        BufferedImage image = decodeImage(XML.getPictureData());
-//        //ImageIO.write(image,"jpg", new File("xiaohai.jpg"));
-//        JFrame f = new JFrame();
-//        JPanel panel = new JPanel(){
-//            @Override
-//            protected void paintComponent(Graphics g) {
-//                g.drawImage(image,0,0,null);
-//            }
-//        };
-//        f.getContentPane().add(panel);
-//        f.setVisible(true);
     }
 
     @Override
@@ -143,10 +131,18 @@ public class Viewer implements Runnable {
 
 class DisplayPanel extends JPanel {
 
+    private final Dimension screenSize;
     private BillboardXML XML;
 
-    public DisplayPanel(String xml) {
+    public DisplayPanel(String xml, Dimension screenSize) {
         this.XML = new BillboardXML(xml);
+        this.screenSize = screenSize;
+
+        // loads background colour and draw the bg colour
+        String backgroundColour = XML.getBackground();
+        Color bg = Color.decode(backgroundColour);
+        this.setBackground(bg);
+
     }
 
     /**
@@ -156,6 +152,7 @@ class DisplayPanel extends JPanel {
      */
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         // handle error
         if (XML.isHasError()) {
             try {
@@ -166,6 +163,8 @@ class DisplayPanel extends JPanel {
             }
             return;
         }
+
+
 
         // loads image if exists
         BufferedImage image = null;
@@ -182,8 +181,67 @@ class DisplayPanel extends JPanel {
             }
         }
 
-        g.drawImage(image, 0, 0, null);
+        // loads message if exists
+        String message = null;
+        Color messageColour = null;
+        if (XML.isHasMessage()) {
+            message = XML.getMessageContent();
+            messageColour = Color.decode(XML.getMessageColour());
+        }
+
+        // loads information
+        String information = null;
+        Color informationColour = null;
+        if (XML.isHasInformation()) {
+            information = XML.getInformationContent();
+            informationColour = Color.decode(XML.getInformationColour());
+        }
+
+
+        // only message is present
+        if(XML.isHasMessage() && (!XML.isHasPicture() || !XML.isHasInformation()))
+        {
+            int fontSize = ((int)(screenSize.width/ message.length()/0.75)+2);
+            String labelText = String.format("<html><h1 style=\"width:%dpx;font-size:%dpx;color:%s;text-align:center\">%s</h1></html>",
+                    1200,fontSize,messageColour, message);
+            JLabel msg = new JLabel(labelText);
+            this.setLayout(new BorderLayout());
+            this.add(msg,BorderLayout.CENTER);
+        }
+        // only picture is present
+        else if(XML.isHasPicture() && (!XML.isHasMessage() || !XML.isHasInformation()))
+        {
+            //the image should be scaled up to half the width and height of the screen and displayed in the centre.
+            // screenSize = 1000 x 750           ==>  500 x 375   1:1.33
+            // imageSize =  100  x 100           ==>  375 x 375   1:1
+            // imageSize =  100  x 50  (1:2)     ==>  500 x 250
+            Dimension imageSize = getImageAloneDimension(screenSize,new Dimension(image.getWidth(),image.getHeight()));
+            Point centerDrawingPoint = getCenterDrawingPoint(screenSize,imageSize);
+            g.drawImage(image,centerDrawingPoint.x,centerDrawingPoint.y,imageSize.width,imageSize.height,null);
+        }
+
     }
 
+    private Dimension getImageAloneDimension(Dimension screenSize, Dimension imageSize){
+        Dimension halfScreenSize = new Dimension(screenSize.width/2,screenSize.height/2);
+        double imageRatio = (double) imageSize.width / imageSize.height;
 
+            double y = 1;
+            double x = imageRatio * y;
+
+            double newImageHeight = halfScreenSize.width / y;
+            if(newImageHeight > halfScreenSize.height){
+                newImageHeight = halfScreenSize.height;
+            }
+            double newImageWidth = imageRatio * newImageHeight;
+
+            return new Dimension((int)newImageWidth,(int)newImageHeight);
+    }
+
+    private Point getCenterDrawingPoint(Dimension screenSize, Dimension imageSize){
+        Point center = new Point(screenSize.width/2,screenSize.height/2);
+        Point leftUpPoint = new Point(center.x-imageSize.width/2,center.y-imageSize.height/2);
+
+        return  leftUpPoint;
+    }
 }

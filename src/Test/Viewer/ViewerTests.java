@@ -30,7 +30,16 @@ public class ViewerTests {
 
         assertEquals("#383242",XML.getBackground());
     }
+    @Test
+    void backgroundColorTest3(){
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<billboard background=\"#00FFFF\">\n" +
+                "    <message>Basic message-only billboard</message>\n" +
+                "</billboard>";
+        BillboardXML XML = new BillboardXML(xml);
 
+        assertEquals("#00FFFF",XML.getBackground());
+    }
 
     @Test
     void messageContentTest1(){
