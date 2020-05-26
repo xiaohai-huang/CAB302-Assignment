@@ -7,13 +7,12 @@ import java.net.Socket;
 import java.util.Properties;
 
 public class ServerConnection {
-    private static int port;
+    private static String propPath  = "./src/network.props";
     public static Socket getSocket() throws IOException {
-        String propPath = "./src/network.props";
         Properties props = new Properties();
         FileInputStream in = null;
         String ip = null;
-
+        Integer port = null;
         try {
             in = new FileInputStream(propPath);
             props.load(in);
@@ -34,6 +33,21 @@ public class ServerConnection {
     }
 
     public static int getPort() {
+        Properties props = new Properties();
+        FileInputStream in = null;
+        Integer port = null;
+        try {
+            in = new FileInputStream(propPath);
+            props.load(in);
+            in.close();
+
+            port = Integer.parseInt(props.getProperty("port"));
+
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         return port;
     }
 

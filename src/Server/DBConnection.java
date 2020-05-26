@@ -22,7 +22,7 @@ public class DBConnection {
       Properties props = new Properties();
       FileInputStream in = null;
       try {
-         in = new FileInputStream("./db.props");
+         in = new FileInputStream("./src/Server/db.props");
          props.load(in);
          in.close();
 
@@ -36,7 +36,7 @@ public class DBConnection {
          instance = DriverManager.getConnection(url + "/" + schema, username,
                password);
       } catch (SQLException | FileNotFoundException sqle) {
-         System.err.println(sqle);
+         System.out.println(sqle);
       } catch (IOException ex) {
          ex.printStackTrace();
       }

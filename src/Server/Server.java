@@ -10,15 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Server {
-    private static final String CREATE_USER_TABLE =
-            "CREATE TABLE IF NOT EXISTS user ("
-                + "userName VARCHAR(30) UNIQUE NOT NULL,"
-                + "password CHAR(128) NOT NULL"
-                + "PRIMARY KEY (userName) );";
 
 
 
     public static void main(String[] args) throws SQLException, IOException {
+
+
+
+
         int port = ServerConnection.getPort();
         ServerSocket serverSocket = new ServerSocket(port);
 
@@ -33,6 +32,8 @@ public class Server {
 
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 
+            BillboardDB db = new BillboardDB();
+
             Request request = null;
             try {
                request = (Request)ois.readObject();
@@ -44,10 +45,7 @@ public class Server {
             assert request != null;
             if(request.getRequestType()== Request.RequestType.REQUEST_CURRENTLY_SHOWING_BILLBOARD)
             {
-                String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                        "<billboard background=\"#7F3FBF\">\n" +
-                        "    <message>Billboard with custom background and default-coloured message</message>\n" +
-                        "</billboard>";
+                String xml = db.getCurrentBillboardXML();
                 Response billboardXML = new Response(Response.ResponseType.SUCCESS,xml);
                 sendResponse(oos,billboardXML);
             }
@@ -56,12 +54,8 @@ public class Server {
             // close all connections
             ois.close();
             oos.close();
-//
-//            Connection c = DBConnection.getInstance();
-//
-//            Statement st = c.createStatement();
-//
-//            c.close();
+            socket.close();
+
         }
 
 
@@ -85,4 +79,6 @@ public class Server {
             sendError(oos,e.getMessage());
         }
     }
+
+
 }
