@@ -4,14 +4,36 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private final RequestType requestType;
+    private final String token;
 
+    private Object content;
+
+    public Object getContent() {
+        return content;
+    }
+
+    public void setContent(Object content) {
+        this.content = content;
+    }
+
+    public String getToken() {
+        return token;
+    }
 
     public enum RequestType{
         REQUEST_CURRENTLY_SHOWING_BILLBOARD,
-
+        LOGIN,
+        GET_CURRENT_OPERATOR,
     }
+
     public Request(RequestType type){
         this.requestType = type;
+        token = null;
+    }
+
+    public Request(RequestType type, String token){
+        this.requestType = type;
+        this.token = token;
     }
 
 

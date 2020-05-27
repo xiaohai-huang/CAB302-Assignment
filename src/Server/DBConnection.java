@@ -10,47 +10,43 @@ import java.util.Properties;
 
 public class DBConnection {
 
-   /**
-    * The singleton instance of the database connection.
-    */
-   private static Connection instance = null;
+    /**
+     * The singleton instance of the database connection.
+     */
+    private static Connection instance = null;
 
-   /**
-    * Constructor intializes the connection.
-    */
-   private DBConnection() {
-      Properties props = new Properties();
-      FileInputStream in = null;
-      try {
-         in = new FileInputStream("./src/Server/db.props");
-         props.load(in);
-         in.close();
+    /**
+     * Constructor intializes the connection.
+     */
+    private DBConnection() throws IOException, SQLException {
+        Properties props = new Properties();
+        FileInputStream in = null;
 
-         // specify the data source, username and password
-         String url = props.getProperty("jdbc.url");
-         String username = props.getProperty("jdbc.username");
-         String password = props.getProperty("jdbc.password");
-         String schema = props.getProperty("jdbc.schema");
+        in = new FileInputStream("./src/Server/db.props");
+        props.load(in);
+        in.close();
 
-         // get a connection
-         instance = DriverManager.getConnection(url + "/" + schema, username,
-               password);
-      } catch (SQLException | FileNotFoundException sqle) {
-         System.out.println(sqle);
-      } catch (IOException ex) {
-         ex.printStackTrace();
-      }
-   }
+        // specify the data source, username and password
+        String url = props.getProperty("jdbc.url");
+        String username = props.getProperty("jdbc.username");
+        String password = props.getProperty("jdbc.password");
+        String schema = props.getProperty("jdbc.schema");
 
-   /**
-    * Provides global access to the singleton instance of the UrlSet.
-    * 
-    * @return a handle to the singleton instance of the UrlSet.
-    */
-   public static Connection getInstance() {
-      if (instance == null) {
-         new DBConnection();
-      }
-      return instance;
-   }
+        // get a connection
+        instance = DriverManager.getConnection(url + "/" + schema, username,
+                password);
+
+    }
+
+    /**
+     * Provides global access to the singleton instance of the UrlSet.
+     *
+     * @return a handle to the singleton instance of the UrlSet.
+     */
+    public static Connection getInstance() throws IOException, SQLException {
+        if (instance == null) {
+            new DBConnection();
+        }
+        return instance;
+    }
 }

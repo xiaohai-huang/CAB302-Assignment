@@ -4,14 +4,14 @@ import java.util.HashMap;
 
 // User Management
 public class UM {
-    private HashMap<String,User> users;
-    private User currentOperator;
+    private HashMap<String, ServerUser> users;
+    private ServerUser currentOperator;
 
-    public UM(HashMap<String,User> users){
+    public UM(HashMap<String, ServerUser> users){
         this.users = users;
     }
 
-    public void setCurrentOperator(User operator){
+    public void setCurrentOperator(ServerUser operator){
         currentOperator = operator;
     }
 
@@ -19,12 +19,12 @@ public class UM {
         currentOperator = users.get(userName);
     }
 
-    public User getUser(String userName){
+    public ServerUser getUser(String userName){
         return users.get(userName);
     }
 
 
-    public HashMap<String,User> getUsers(){
+    public HashMap<String, ServerUser> getUsers(){
         return users;
     }
 
@@ -36,7 +36,7 @@ public class UM {
 
     public Boolean grantPermission(String userName,Permission p){
         // todo: more constraints
-        User u = getUser(userName);
+        ServerUser u = getUser(userName);
         var permissions = u.getPermissions();
         permissions.put(p,true);
 
@@ -45,7 +45,7 @@ public class UM {
 
     public Boolean revokePermission(String userName,Permission p){
         // todo: more constraints
-        User u = getUser(userName);
+        ServerUser u = getUser(userName);
         var permissions = u.getPermissions();
         permissions.put(p,false);
 

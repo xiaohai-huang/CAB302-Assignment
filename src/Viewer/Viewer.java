@@ -7,14 +7,12 @@ import Server.Response;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.Base64;
 
@@ -54,7 +52,8 @@ public class Viewer {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    System.exit(1);
+                    viewer.setVisible(false);
+                    viewer.dispose();
                 }
             }
         });
@@ -63,7 +62,8 @@ public class Viewer {
         viewer.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.exit(1);
+               viewer.setVisible(false);
+               viewer.dispose();
             }
         });
 
@@ -99,12 +99,12 @@ public class Viewer {
 
     public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
         // background
-        JFrame baseFrame = new JFrame();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        baseFrame.setUndecorated(true);
-        baseFrame.setSize(screenSize);
-        baseFrame.setBackground(Color.gray);
-        baseFrame.setVisible(true);
+//        JFrame baseFrame = new JFrame();
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        baseFrame.setUndecorated(true);
+//        baseFrame.setSize(screenSize);
+//        baseFrame.setBackground(Color.gray);
+//        baseFrame.setVisible(true);
 
         Viewer viewer = new Viewer();
 
@@ -128,7 +128,7 @@ public class Viewer {
 
                 response = (Response) ois.readObject();
                 xml = (String) response.getResponseContent();
-            } catch (ConnectException e) {
+            } catch (SocketException e) {
                 // display 'cannot connect to server'
                 xml = ERROR_BILLBOARD;
             }

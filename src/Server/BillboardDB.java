@@ -1,18 +1,17 @@
 package Server;
 
+import ControlPanel.BasicUser;
 import ControlPanel.Permission;
-import ControlPanel.User;
+import ControlPanel.ServerUser;
 import Viewer.Viewer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.Date;
 import java.util.Random;
 
 public class BillboardDB {
@@ -133,7 +132,7 @@ public class BillboardDB {
         }
     }
 
-    public BillboardDB() throws SQLException {
+    public BillboardDB() throws SQLException, IOException {
 
         connection = DBConnection.getInstance();
 
@@ -258,8 +257,8 @@ public class BillboardDB {
 
         try {
             // get the original salt
-            User user = getUser(userName);
-            String salt = user.getSalt();
+            ServerUser serverUser = getUser(userName);
+            String salt = serverUser.getSalt();
             changeUserPassword.setString(1,saltPassword(newHashedPassword,salt));
             changeUserPassword.setString(2,userName);
             changeUserPassword.executeUpdate();
@@ -269,10 +268,10 @@ public class BillboardDB {
     }
 
     public boolean verifyUserPassword(String userName, String hashedPassword) {
-        User user = getUser(userName);
-        String salt = user.getSalt();
+        ServerUser serverUser = getUser(userName);
+        String salt = serverUser.getSalt();
         String saltedPassword = saltPassword(hashedPassword, salt);
-        String realPassword = user.getSaltedPassword();
+        String realPassword = serverUser.getSaltedPassword();
 
         return saltedPassword.equals(realPassword);
     }
@@ -322,25 +321,39 @@ public class BillboardDB {
         return bytesToHexString(md.digest((hashedPassword + salt).getBytes()));
     }
 
-    public User getUser(String userName) {
+    public ServerUser getUser(String userName) {
         try {
             getUser.setString(1, userName);
             ResultSet rs = getUser.executeQuery();
             rs.next();
-            return new User(userName,
+            return new ServerUser(userName,
                     rs.getString("password"),
                     rs.getString("salt"),
                     rs.getBoolean("create_billboards"),
                     rs.getBoolean("edit_all_billboards"),
                     rs.getBoolean("schedule_billboards"),
                     rs.getBoolean("edit_users"));
+        } catch (SQLException ignored) { }
+        return null;
+    }
+
+    public BasicUser getBasicUser(String userName){
+        try {
+            getUser.setString(1, userName);
+            ResultSet rs = getUser.executeQuery();
+            rs.next();
+            return new BasicUser(userName,
+                    rs.getBoolean("create_billboards"),
+                    rs.getBoolean("edit_all_billboards"),
+                    rs.getBoolean("schedule_billboards"),
+                    rs.getBoolean("edit_users"));
         } catch (SQLException e) {
-            System.out.println("Fail to get the user");
+            System.out.println(e.getMessage());
         }
         return null;
     }
 
-    private static String bytesToHexString(byte[] bytes) {
+    public static String bytesToHexString(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
         for (byte b : bytes) {
             sb.append(String.format("%02x", b & 0xFF));
@@ -353,7 +366,7 @@ public class BillboardDB {
      * @param str
      * @return hex representation of the string
      */
-    private static String hashString(String str) {
+    public static String hashString(String str) {
         return bytesToHexString(md.digest(str.getBytes()));
     }
 
@@ -436,9 +449,8 @@ public class BillboardDB {
     }
 
     public static void main(String[] args) throws SQLException, IOException {
-//        BillboardDB db = new BillboardDB();
-        BufferedImage error = ImageIO.read(new File("./not image.jpg"));
-        System.out.println( Viewer.encodeImage(error));
+        BillboardDB db = new BillboardDB();
+      db.addUser("xiaohai",hashString("123"));
 
 
     }

@@ -16,6 +16,9 @@ public class Response implements Serializable {
         this.responseType = type;
         this.responseContent = responseContent;
     }
+    public Response(ResponseType type){
+        this.responseType = type;
+    }
 
     public ResponseType getResponseType() {
         return responseType;

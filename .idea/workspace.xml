@@ -2,18 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d15aff75-b770-43f2-a928-503fa9151f5c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Server/BillboardDB.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Test/Server/BillboardDBTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/xml/billboards/xiaohai.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/ServerUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControlPanel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/UM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/UM.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/BasicUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server/BillboardDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/BillboardDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/DBConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/DBConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Request.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Response.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Server/db.props" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/db.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Viewer/ServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Viewer/ServerConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Viewer/Viewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Viewer/Viewer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network.props" beforeDir="false" afterPath="$PROJECT_DIR$/src/network.props" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,13 +59,39 @@
       <recent name="D:\Java_Projects\CAB302" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Viewer">
+  <component name="RunManager" selected="Application.ControlPanel">
     <configuration name="BillboardDB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Server.BillboardDB" />
       <module name="CAB302" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ControlPanel" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanel" />
+      <module name="CAB302" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ControlPanel.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ControlPanelUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanelUI" />
+      <module name="CAB302" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ControlPanel.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -87,19 +112,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ServerConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Viewer.ServerConnection" />
-      <module name="CAB302" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Viewer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Viewer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Viewer.Viewer" />
       <module name="CAB302" />
@@ -113,35 +125,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ViewerTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CAB302" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Test.Viewer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Test.Viewer" />
-      <option name="MAIN_CLASS_NAME" value="Test.Viewer.ViewerTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Application.Viewer" />
-      <item itemvalue="Application.ServerConnection" />
-      <item itemvalue="Application.Server" />
-      <item itemvalue="JUnit.ViewerTests" />
       <item itemvalue="Application.BillboardDB" />
+      <item itemvalue="Application.ControlPanelUI" />
+      <item itemvalue="Application.ControlPanel" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Viewer" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Viewer" />
+        <item itemvalue="Application.ControlPanel" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.Viewer" />
         <item itemvalue="Application.BillboardDB" />
-        <item itemvalue="Application.ServerConnection" />
-        <item itemvalue="JUnit.ViewerTests" />
+        <item itemvalue="Application.ControlPanelUI" />
       </list>
     </recent_temporary>
   </component>
@@ -233,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590414484578</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="successfully connect viewer with server">
+      <created>1590499009827</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1590499009827</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -259,21 +263,26 @@
     <MESSAGE value="finished only picture and only message situation" />
     <MESSAGE value="left two situations viewer" />
     <MESSAGE value="start to connect server and viewer" />
-    <option name="LAST_COMMIT_MESSAGE" value="start to connect server and viewer" />
+    <MESSAGE value="successfully connect viewer with server" />
+    <option name="LAST_COMMIT_MESSAGE" value="successfully connect viewer with server" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser" timestamp="1590465836527">
+    <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser" timestamp="1590585794663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1590465836527" />
-    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1590414483514">
+    <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1590585794663" />
+    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590547965792">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590414483514" />
-    <state width="478" height="466" key="DebuggerActiveHint" timestamp="1590330694823">
+    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1590547965792" />
+    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1590499008911">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="478" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1590330694823" />
+    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590499008911" />
+    <state width="478" height="466" key="DebuggerActiveHint" timestamp="1590550212101">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="478" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1590550212101" />
     <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590138735249">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -282,42 +291,42 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="473" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590200578174" />
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom" timestamp="1590498405523">
+    <state width="1493" height="130" key="GridCell.Tab.0.bottom" timestamp="1590590359219">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590498405523" />
+    <state width="1493" height="130" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590590359219" />
     <state width="1877" height="210" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.center" timestamp="1590498405522">
+    <state width="1493" height="130" key="GridCell.Tab.0.center" timestamp="1590590359219">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590498405522" />
+    <state width="1493" height="130" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590590359219" />
     <state width="1877" height="210" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.left" timestamp="1590498405522">
+    <state width="1493" height="130" key="GridCell.Tab.0.left" timestamp="1590590359218">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590498405522" />
+    <state width="1493" height="130" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590590359218" />
     <state width="1877" height="210" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779747" />
-    <state width="1493" height="130" key="GridCell.Tab.0.right" timestamp="1590498405523">
+    <state width="1493" height="130" key="GridCell.Tab.0.right" timestamp="1590590359219">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590498405523" />
+    <state width="1493" height="130" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590590359219" />
     <state width="1877" height="210" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1590496989137">
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1590590359205">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590496989137" />
-    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1590496989136">
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590590359205" />
+    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1590590359204">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1590496989136" />
-    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1590496989136">
+    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1590590359204" />
+    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1590590359203">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1590496989136" />
-    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1590496989137">
+    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1590590359203" />
+    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1590590359204">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1590496989137" />
+    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1590590359204" />
     <state x="249" y="0" key="SettingsEditor" timestamp="1590459471462">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -338,20 +347,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1590376973030" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1590488102010">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1590551903780">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1590488102010" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1590551903780" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Server/DBConnection.java</url>
-          <line>23</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/src/Server/Server.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="user.this" language="JAVA" />
+        <watch expression="user.this@0" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
