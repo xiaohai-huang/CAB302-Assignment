@@ -1,6 +1,8 @@
 package Server;
 
 import ControlPanel.BasicUser;
+import ControlPanel.Permission;
+import ControlPanel.ServerUser;
 import Viewer.ServerConnection;
 
 import java.io.*;
@@ -22,7 +24,7 @@ public class Server {
     private static HashMap<String, String> validSessions = new HashMap<>();
 
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) throws IOException {
 
 
         int port = ServerConnection.getPort();
@@ -52,7 +54,7 @@ public class Server {
             Request request = null;
             try {
                 request = (Request) ois.readObject();
-            } catch (ClassNotFoundException | ClassCastException e) {
+            } catch (ClassNotFoundException | ClassCastException|InvalidObjectException e) {
                 sendError(oos, e.getMessage());
             }
 
@@ -94,13 +96,61 @@ public class Server {
                         break;
                     }
                     case GET_CURRENT_OPERATOR: {
-                        String token = (String) request.getToken();
+                        String token =  request.getToken();
+                        if(!validSessions.containsKey(token)){
+                            sendError(oos,"Authentication fail!");
+                        }
                         String userName = validSessions.get(token);
                         BasicUser user = db.getBasicUser(userName);
                         Response response = new Response(Response.ResponseType.SUCCESS,user);
                         oos.writeObject(response);
                         oos.flush();
                         break;
+
+                    }
+                    case CREATE_EDIT_BILLBOARD:{
+                        String token = request.getToken();
+                        if(!validSessions.containsKey(token)){
+                            sendError(oos,"Authentication fail!");
+                        }
+                        // parse the content sent by the client
+                        String[] name_contents =  (String[]) request.getContent();
+
+                        ServerUser user = db.getUser(validSessions.get(token));
+                        // either create a new one or replace the old one
+                        if(user.hasPermission(Permission.CREATE_BILLBOARDS)){
+                            if(db.hasBillboard(name_contents[0])){// edit billboard
+
+                                // if the user is the billboard owner and billboard is not currently scheduled
+                                if(db.getBillboardCreatorName(name_contents[0]).equals(user.getUserName())
+                                        && !db.getCurrentBillboardName().equals(name_contents[0]))
+                                {
+                                    db.updateBillboard(name_contents[0],name_contents[1]);
+                                    Response success = new Response(Response.ResponseType.SUCCESS);
+                                    oos.writeObject(success);
+                                    oos.flush();
+                                }
+                                else if(user.hasPermission(Permission.EDIT_ALL_BILLBOARDS)){
+                                    //  To edit another user’s billboard or edit a billboard that is currently scheduled,
+                                    //  must have “Edit All Billboards” permission
+                                    db.updateBillboard(name_contents[0],name_contents[1]);
+                                    Response success = new Response(Response.ResponseType.SUCCESS);
+                                    oos.writeObject(success);
+                                    oos.flush();
+                                }
+                                else {
+                                    Response fail = new Response(Response.ResponseType.FAIL);
+                                    oos.writeObject(fail);
+                                    oos.flush();
+                                }
+                            }
+                            else {// create a new one
+                                db.createBillboard(name_contents[0],user.getUserName(),name_contents[1]);
+                                Response success = new Response(Response.ResponseType.SUCCESS);
+                                oos.writeObject(success);
+                                oos.flush();
+                            }
+                        }
                     }
                 }
 

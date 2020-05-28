@@ -24,6 +24,7 @@ public class Request implements Serializable {
         REQUEST_CURRENTLY_SHOWING_BILLBOARD,
         LOGIN,
         GET_CURRENT_OPERATOR,
+        CREATE_EDIT_BILLBOARD,
     }
 
     public Request(RequestType type){

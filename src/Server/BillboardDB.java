@@ -3,11 +3,7 @@ package Server;
 import ControlPanel.BasicUser;
 import ControlPanel.Permission;
 import ControlPanel.ServerUser;
-import Viewer.Viewer;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +29,7 @@ public class BillboardDB {
                     "\tbillboardContent TEXT NOT NULL,\n" +
                     "\n" +
                     "    PRIMARY KEY (billboardName),\n" +
-                    "    FOREIGN KEY (billboardCreator) REFERENCES user(userName)\n" +
+                    "    FOREIGN KEY (billboardCreator) REFERENCES user(userName)  ON UPDATE CASCADE\n" +
                     ");";
     private static final String CREATE_SCHEDULING_TABLE =
             "CREATE TABLE IF NOT EXISTS scheduling (\n" +
@@ -42,7 +38,7 @@ public class BillboardDB {
                     "    endTime DATETIME  NOT NULL ,\n" +
                     "    createdTime DATETIME DEFAULT CURRENT_TIMESTAMP,\n" +
                     "    PRIMARY KEY (billboardName,startTime),\n" +
-                    "    FOREIGN KEY (billboardName) REFERENCES billboard(billboardName)\n" +
+                    "    FOREIGN KEY (billboardName) REFERENCES billboard(billboardName) ON UPDATE CASCADE\n" +
                     "    );";
     // 1 means exists
     private static final String CHECK_TABLE_EXISTENCE =
@@ -80,9 +76,21 @@ public class BillboardDB {
     private static final String CREATE_BILLBOARD =
             "INSERT INTO billboard (billboardName,billboardCreator,billboardContent)\n" +
                     "VALUES (?,?,?)";
+
+    private static final String UPDATE_BILLBOARD =
+            "UPDATE billboard\n" +
+                    "SET billboardContent=?\n" +
+                    "WHERE billboardName =?;";
+
     private static final String GET_BILLBOARD =
             "SELECT billboardContent FROM billboard\n" +
                     "WHERE billboardName = ?;";
+
+    private static final String GET_BILLBOARD_CREATOR =
+            "SELECT u.userName FROM user u\n" +
+                    "LEFT JOIN billboard b\n" +
+                    "ON u.userName = b.billboardCreator\n" +
+                    "WHERE b.billboardName=?;";
 
     private static final String SCHEDULE_BILLBOARD =
             "INSERT INTO scheduling (billboardName,startTime,endTime)\n" +
@@ -96,6 +104,10 @@ public class BillboardDB {
                     "ORDER BY createdTime DESC\n" +
                     "LIMIT 1) AS current_scheduled_billboard\n" +
                     "ON b.billboardName = current_scheduled_billboard.billboardName;";
+
+    private static final String HAS_BILLBOARD =
+            "SELECT count(billboardName) AS RowCount FROM billboard\n" +
+                    "WHERE billboardName = ?;";
 
 
     private Connection connection;
@@ -112,11 +124,17 @@ public class BillboardDB {
 
     private PreparedStatement createBillboard;
 
-    private PreparedStatement getBillboard;
+    private PreparedStatement updateBillboard;
+
+    private PreparedStatement getBillboardCreator;
+
+    private PreparedStatement getBillboardXML;
 
     private PreparedStatement scheduleBillboard;
 
     private PreparedStatement currentBillboardXML;
+
+    private PreparedStatement hasBillboard;
 
     private Statement statement;
 
@@ -143,9 +161,13 @@ public class BillboardDB {
         getUser = connection.prepareStatement(GET_USER);
         changeUserPassword = connection.prepareStatement(CHANGE_USER_PASSWORD);
         createBillboard = connection.prepareStatement(CREATE_BILLBOARD);
-        getBillboard = connection.prepareStatement(GET_BILLBOARD);
+        updateBillboard = connection.prepareStatement(UPDATE_BILLBOARD);
+        getBillboardCreator = connection.prepareStatement(GET_BILLBOARD_CREATOR);
+        getBillboardXML = connection.prepareStatement(GET_BILLBOARD);
         scheduleBillboard = connection.prepareStatement(SCHEDULE_BILLBOARD);
         currentBillboardXML = connection.prepareStatement(GET_CURRENT_BILLBOARD_XML);
+        hasBillboard = connection.prepareStatement(HAS_BILLBOARD);
+
 
 
         // will have effects when fresh start up
@@ -392,6 +414,29 @@ public class BillboardDB {
         }
     }
 
+    public String getBillboardCreatorName(String billboardName){
+        try {
+            getBillboardCreator.setString(1,billboardName);
+            ResultSet rs = getBillboardCreator.executeQuery();
+            rs.next();
+            return rs.getString("userName");
+        } catch (SQLException e) {
+            return "";
+        }
+    }
+
+    public void updateBillboard(String billboardName, String xml)
+    {
+        try {
+            updateBillboard.setString(1,xml);
+            updateBillboard.setString(2,billboardName);
+            updateBillboard.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Schedule a billboard
      * @param billboardName
@@ -436,16 +481,49 @@ public class BillboardDB {
         return null;
     }
 
+    public String getCurrentBillboardName(){
+        try {
+            ResultSet rs = currentBillboardXML.executeQuery();
+            if( rs.next())
+            {
+                return rs.getString("billboardName");
+            }
+            else
+            {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public String getBillboardXML(String billboardName){
         try {
-            getBillboard.setString(1,billboardName);
-            ResultSet rs = getBillboard.executeQuery();
+            getBillboardXML.setString(1,billboardName);
+            ResultSet rs = getBillboardXML.executeQuery();
             rs.next();
             return rs.getString("billboardContent");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean hasBillboard(String billboardName){
+        try {
+            hasBillboard.setString(1,billboardName);
+            ResultSet rs = hasBillboard.executeQuery();
+            rs.next();
+            if(rs.getInt(1)==1){
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) throws SQLException, IOException {
