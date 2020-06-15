@@ -490,14 +490,19 @@ public class BillboardDB {
             }
             else
             {
-                return null;
+                return "";
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
+    /**
+     * Gets the billboard's contents(xml)
+     * @param billboardName
+     * @return if billboard does not exists return an empty string ""
+     */
     public String getBillboardXML(String billboardName){
         try {
             getBillboardXML.setString(1,billboardName);
@@ -505,9 +510,8 @@ public class BillboardDB {
             rs.next();
             return rs.getString("billboardContent");
         } catch (SQLException e) {
-            e.printStackTrace();
+            return "";
         }
-        return null;
     }
 
     public boolean hasBillboard(String billboardName){

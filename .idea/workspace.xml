@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d15aff75-b770-43f2-a928-503fa9151f5c" name="Default Changelist" comment="finished create billboard tab">
+    <list default="true" id="d15aff75-b770-43f2-a928-503fa9151f5c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanelMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanelView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/Controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/LoginView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/Model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ControlPanel/View.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Server/CannotCommunicateWithServerException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Server/TokenExpireException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Test/ControlPanel/ControlPanelTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanelUI.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanelUI.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/BillboardDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/BillboardDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Request.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server/ViewerRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Viewer/Viewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Viewer/Viewer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,30 +56,18 @@
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Java_Projects\CAB302\src\Server" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="Server" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Java_Projects\CAB302" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Test.ControlPanel" />
+      <recent name="Server" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Java_Projects\CAB302\src\Server" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.ControlPanel">
-    <configuration name="BillboardDB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Server.BillboardDB" />
-      <module name="CAB302" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Server.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.ControlPanelMain">
     <configuration name="ControlPanel" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanel" />
       <module name="CAB302" />
@@ -80,8 +81,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ControlPanelUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanelUI" />
+    <configuration name="ControlPanelMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanelMain" />
+      <module name="CAB302" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ControlPanel.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LoginView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ControlPanel.LoginView" />
       <module name="CAB302" />
       <extension name="coverage">
         <pattern>
@@ -120,19 +134,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Viewer" />
-      <item itemvalue="Application.Server" />
-      <item itemvalue="Application.BillboardDB" />
       <item itemvalue="Application.ControlPanel" />
-      <item itemvalue="Application.ControlPanelUI" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Viewer" />
+      <item itemvalue="Application.LoginView" />
+      <item itemvalue="Application.ControlPanelMain" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ControlPanel" />
+        <item itemvalue="Application.ControlPanelMain" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.ControlPanel" />
+        <item itemvalue="Application.LoginView" />
         <item itemvalue="Application.Viewer" />
-        <item itemvalue="Application.BillboardDB" />
-        <item itemvalue="Application.ControlPanelUI" />
       </list>
     </recent_temporary>
   </component>
@@ -238,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590590483889</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="finished create billboard tab">
+      <created>1590677705634</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1590677705634</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -278,58 +299,58 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1590547965792" />
-    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1590677596644">
+    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1592192345505">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590677596644" />
-    <state width="478" height="466" key="DebuggerActiveHint" timestamp="1590675911311">
+    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1592192345505" />
+    <state width="478" height="466" key="DebuggerActiveHint" timestamp="1590725130217">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="478" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1590675911311" />
+    <state width="478" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1590725130217" />
     <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590138735249">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="93" y="93" width="1350" height="638" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1590138735249" />
-    <state x="473" y="153" key="FileChooserDialogImpl" timestamp="1590200578174">
+    <state x="473" y="153" key="FileChooserDialogImpl" timestamp="1591165278592">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="473" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590200578174" />
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom" timestamp="1590677573723">
+    <state x="473" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591165278592" />
+    <state width="1493" height="130" key="GridCell.Tab.0.bottom" timestamp="1592192302663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590677573723" />
+    <state width="1493" height="130" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
     <state width="1877" height="210" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.center" timestamp="1590677573723">
+    <state width="1493" height="130" key="GridCell.Tab.0.center" timestamp="1592192302663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590677573723" />
+    <state width="1493" height="130" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
     <state width="1877" height="210" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.left" timestamp="1590677573722">
+    <state width="1493" height="130" key="GridCell.Tab.0.left" timestamp="1592192302663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590677573722" />
+    <state width="1493" height="130" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
     <state width="1877" height="210" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779747" />
-    <state width="1493" height="130" key="GridCell.Tab.0.right" timestamp="1590677573723">
+    <state width="1493" height="130" key="GridCell.Tab.0.right" timestamp="1592192302663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590677573723" />
+    <state width="1493" height="130" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
     <state width="1877" height="210" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="260" key="GridCell.Tab.1.bottom" timestamp="1590676249418">
+    <state width="1493" height="260" key="GridCell.Tab.1.bottom" timestamp="1592134756767">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590676249418" />
-    <state width="1493" height="260" key="GridCell.Tab.1.center" timestamp="1590676249417">
+    <state width="1493" height="260" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
+    <state width="1493" height="260" key="GridCell.Tab.1.center" timestamp="1592134756767">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1590676249417" />
-    <state width="1493" height="260" key="GridCell.Tab.1.left" timestamp="1590676249417">
+    <state width="1493" height="260" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
+    <state width="1493" height="260" key="GridCell.Tab.1.left" timestamp="1592134756767">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1590676249417" />
-    <state width="1493" height="260" key="GridCell.Tab.1.right" timestamp="1590676249418">
+    <state width="1493" height="260" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
+    <state width="1493" height="260" key="GridCell.Tab.1.right" timestamp="1592134756767">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1590676249418" />
+    <state width="1493" height="260" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
     <state x="249" y="0" key="SettingsEditor" timestamp="1590459471462">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -338,10 +359,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="647" y="206" key="UIDesigner.ListEditorDialog/0.0.1536.824@0.0.1536.824" timestamp="1590199476251" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590590666307">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590677720650">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590590666307" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590677720650" />
     <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1590138735249">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -350,29 +371,27 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="498" y="305" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1536.824@0.0.1536.824" timestamp="1590291123615" />
-    <state x="425" y="187" key="run.anything.popup" timestamp="1590376973030">
+    <state x="585" y="253" key="git4idea.ui.GitTagDialog" timestamp="1590718796982">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1590376973030" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1590630349963">
+    <state x="585" y="253" key="git4idea.ui.GitTagDialog/0.0.1536.824@0.0.1536.824" timestamp="1590718796982" />
+    <state x="209" y="32" key="new project wizard" timestamp="1591165280629">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1590630349963" />
+    <state x="209" y="32" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1591165280629" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1592187805059">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1592187805059" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1590677717817">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1590677717817" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Server/Server.java</url>
-          <line>112</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="name_contents[0]" language="JAVA" />
-        <watch expression="db.hasBillboard(name_contents[0]" language="JAVA" />
+        <watch expression="loginView.getExitBtn()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

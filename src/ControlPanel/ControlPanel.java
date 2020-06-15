@@ -30,6 +30,8 @@ public class ControlPanel extends JFrame {
 
     private BasicUser operator;
 
+    private boolean validSession;
+
     public ControlPanel() {
         super("Billboard Control Panel");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -119,10 +121,12 @@ public class ControlPanel extends JFrame {
         JPanel listBillboardsPanel = new JPanel();
         JPanel scheduleBillboardsPanel = new JPanel();
         JPanel editUsersPanel = new JPanel();
+        JPanel logoutPanel = makeLogOutPanel();
         tabbedPane.add("Create Billboards", createBillboardsPanel);
         tabbedPane.add("List Billboards", listBillboardsPanel);
         tabbedPane.add("Schedule Billboards", scheduleBillboardsPanel);
         tabbedPane.add("Edit Users", editUsersPanel);
+        tabbedPane.add("Log Out",logoutPanel);
 
         // some users might not have the rights to browse these two tabs
         if (!operator.hasPermission(Permission.CREATE_BILLBOARDS)) {
@@ -354,7 +358,7 @@ public class ControlPanel extends JFrame {
                 if (responseType == Response.ResponseType.SUCCESS) {
                     JOptionPane.showMessageDialog(panel, "Successfully created a billboard!");
                 } else {
-                    JOptionPane.showMessageDialog(panel, "Unable to create the billboard!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Unable to create the billboard! "+response.getResponseContent(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -376,7 +380,7 @@ public class ControlPanel extends JFrame {
                 String finalPicType = picType;
                 Viewer preview = new Viewer() {
                     @Override
-                    public String getXMLSource() {
+                    public String getXML() {
                         return createBillboardXML(bgColour, msg, msgColour,
                                 picture, finalPicType, info, infoColour);
                     }
@@ -668,6 +672,29 @@ public class ControlPanel extends JFrame {
         });
 
         return centerPanel;
+    }
+
+    private JPanel makeLogOutPanel(){
+        JPanel louOutPanel = new JPanel();
+        JButton logOutBtn = new JButton("Log Out");
+        logOutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Request logOutRequest = new Request(Request.RequestType.LOG_OUT,token);
+                Response response = sendRequestAndGetResponse(logOutRequest);
+                boolean success = response.getResponseType() == Response.ResponseType.SUCCESS;
+                if(success){
+                    JOptionPane.showConfirmDialog(null,"Successfully Log Out!");
+                    validSession = false;
+                }
+                else
+                {
+                    JOptionPane.showConfirmDialog(null,"Fail to Log Out!");
+                    validSession = true;
+                }
+            }
+        });
+        return louOutPanel;
     }
 
     private String createBillboardXML(String billboardColour,

@@ -38,6 +38,7 @@ public class Viewer {
         viewer.dispose();
     }
 
+    private String xml = START_UP_BILLBOARD;
     public Viewer() {
         // makes the app full screen
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -80,8 +81,7 @@ public class Viewer {
 
 
         // loads the content to be displayed
-        String xml = getXMLSource();// the default billboard
-        displayPanel = new DisplayPanel(xml, screenSize);
+        displayPanel = new DisplayPanel(getXML(), screenSize);
 
         // displays the content
         viewer.getContentPane().add(displayPanel);
@@ -91,8 +91,12 @@ public class Viewer {
     }
 
     // default
-    public String getXMLSource() {
-        return START_UP_BILLBOARD;
+    public String getXML() {
+        return xml;
+    }
+
+    public void setXML(String xml){
+        this.xml = xml;
     }
 
     private static final int FIFTY_SECONDS_IN_MILLIS = 15000;
