@@ -20,14 +20,16 @@ public class Request implements Serializable {
         return token;
     }
 
-    public enum RequestType{
+    public enum RequestType {
         REQUEST_CURRENTLY_SHOWING_BILLBOARD,
         LOGIN,
         LOG_OUT,
         GET_CURRENT_OPERATOR,
         CREATE_EDIT_BILLBOARD,
         GET_USER_PERMISSIONS,
-        GET_BILLBOARD_INFORMATION
+        GET_BILLBOARD_INFORMATION,
+        LIST_BILLBOARDS,
+        DELETE_BILLBOARD
     }
 
     public Request(RequestType type){

@@ -5,12 +5,11 @@ import ControlPanel.Permission;
 import ControlPanel.ServerUser;
 import Viewer.ServerConnection;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 import static Server.BillboardDB.bytesToHexString;
@@ -21,8 +20,8 @@ public class Server {
      * Token -> UserName
      */
     private static HashMap<String, String> validSessions = new HashMap<>();
-
-    private static final long DAY_IN_MILLISECONDS = 20000;// to be changed
+    // 86400000
+    private static final long DAY_IN_MILLISECONDS = 86400000;// to be changed
 
     public static void main(String[] args) throws IOException {
 
@@ -92,7 +91,7 @@ public class Server {
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    if(validSessions.containsKey(token)){
+                                    if (validSessions.containsKey(token)) {
                                         System.out.println("Expired a token of user: " + userName);
                                         validSessions.remove(token);
                                     }
@@ -105,7 +104,7 @@ public class Server {
                         oos.flush();
                         break;
                     }
-                    case GET_BILLBOARD_INFORMATION:{
+                    case GET_BILLBOARD_INFORMATION: {
                         /*
                          the Control Panel will send the Server a billboard’s name and a valid session token.
                          The Server will then send the billboard’s contents.
@@ -113,27 +112,27 @@ public class Server {
                          */
                         String token = request.getToken();
                         if (!validSessions.containsKey(token)) {
-                            sendError(oos, "Authentication fail or Token has expired");
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
                             break;
                         }
                         String billboardName = (String) request.getContent();
                         String xml = db.getBillboardXML(billboardName);
-                        // if the board does not exist what would be returned?
-                        System.out.println(xml);
-                        Response response = new Response(Response.ResponseType.SUCCESS,xml);
-                        sendResponse(oos,response);
+                        Response response = new Response(Response.ResponseType.SUCCESS, xml);
+                        sendResponse(oos, response);
                         break;
                     }
                     case GET_CURRENT_OPERATOR: {
                         String token = request.getToken();
                         if (!validSessions.containsKey(token)) {
-                            sendError(oos, "Authentication fail or Token has expired");
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
                             break;
                         }
                         String userName = validSessions.get(token);
                         BasicUser user = db.getBasicUser(userName);
                         Response response = new Response(Response.ResponseType.SUCCESS, user);
-                        sendResponse(oos,response);
+                        sendResponse(oos, response);
                         break;
                     }
                     case GET_USER_PERMISSIONS: {
@@ -145,7 +144,8 @@ public class Server {
                          */
                         String token = request.getToken();
                         if (!validSessions.containsKey(token)) {
-                            sendError(oos, "Authentication fail or Token has expired");
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
                             break;
                         }
                         String requestedUserName = (String) request.getContent();
@@ -159,29 +159,31 @@ public class Server {
                             var permissions = requestedUser.getPermissions();
                             // convert permissions from hashmap into arraylist
                             ArrayList<Permission> userPermissions = new ArrayList<>();
-                            for(Permission p:permissions.keySet()){
-                                if(permissions.get(p)){
+                            for (Permission p : permissions.keySet()) {
+                                if (permissions.get(p)) {
                                     userPermissions.add(p);
                                 }
                             }
 
-                            response = new Response( Response.ResponseType.SUCCESS,userPermissions);
+                            response = new Response(Response.ResponseType.SUCCESS, userPermissions);
                         } else {
-                            response = new Response(Response.ResponseType.FAIL,null);
+                            response = new Response(Response.ResponseType.FAIL, null);
                         }
-                        sendResponse(oos,response);
+                        sendResponse(oos, response);
                         break;
                     }
                     case CREATE_EDIT_BILLBOARD: {
                         String token = request.getToken();
                         if (!validSessions.containsKey(token)) {
-                            sendError(oos, "Authentication fail or Token has expired");
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
                             break;
                         }
                         // parse the content sent by the client
                         String[] name_contents = (String[]) request.getContent();
 
                         ServerUser user = db.getUser(validSessions.get(token));
+
                         // either create a new one or replace the old one
                         if (user.hasPermission(Permission.CREATE_BILLBOARDS)) {
                             if (db.hasBillboard(name_contents[0])) {// edit billboard
@@ -211,18 +213,100 @@ public class Server {
                                 oos.writeObject(success);
                                 oos.flush();
                             }
+                        } else {
+                            Response response = new Response(Response.ResponseType.FAIL, "You don't have " +
+                                    "EDIT BILLBOARD permission!");
+                            sendResponse(oos, response);
                         }
+
+                        break;
+                    }
+                    case DELETE_BILLBOARD: {
+                        /*
+                        Delete billboard: the Control Panel will send the Server a billboard’s name
+                        and a valid session token.
+                        The Server will then delete the billboard
+                        and any scheduled showings of it and send back an acknowledgement.
+                        (Permissions required: if deleting own billboard and
+                        that billboard is not currently scheduled, must have “Create Billboards” permission.
+                        To delete any other billboards, including those currently scheduled,
+                        must have “Edit All Billboards” permission.)
+                        */
+                        String token = request.getToken();
+                        if (!validSessions.containsKey(token)) {
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
+                            break;
+                        }
+                        String boardName = (String) request.getContent();
+                        BasicUser operator = db.getBasicUser(validSessions.get(token));
+                        String[][] billboards = db.getAllBillboards();
+
+                        boolean isOwner = false;
+                        boolean isScheduled = false;
+                        // check the ownership
+                        for (String[] row : billboards) {
+                            if (row[0].equals(boardName) && row[1].equals(operator.getUserName())) {
+                                isOwner = true;
+                                break;
+                            }
+                        }
+                        // check whether the billboard is currently scheduled
+                        String currentBillboardName = db.getCurrentBillboardName();
+                        if (currentBillboardName.equals(boardName)) {
+                            isScheduled = true;
+                        }
+
+                        if (operator.hasPermission(Permission.EDIT_ALL_BILLBOARDS)) {
+                            db.deleteBillboard(boardName);
+                            Response response = new Response(Response.ResponseType.SUCCESS,
+                                    "Successfully deleted the billboard!");
+                            sendResponse(oos, response);
+                        } else if (isOwner && !isScheduled && operator.hasPermission(Permission.CREATE_BILLBOARDS)) {
+                            db.deleteBillboard(boardName);
+                            Response response = new Response(Response.ResponseType.SUCCESS,
+                                    "Successfully deleted the billboard!");
+                            sendResponse(oos, response);
+                        } else {
+                            Response response = new Response(Response.ResponseType.FAIL,
+                                    "Fail to delete the billboard!");
+                            sendResponse(oos, response);
+                        }
+                        break;
+                    }
+                    case LIST_BILLBOARDS: {
+                        /*
+                         the Control Panel will send the Server a valid session token
+                         and the Server will respond with a list of billboards
+                         (including the name and creator of each,
+                         as well as any other information your team feels is appropriate.
+                         (Permissions required: none.)
+                         */
+                        String token = request.getToken();
+                        if (!validSessions.containsKey(token)) {
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
+                            break;
+                        }
+                        Response response = new Response(Response.ResponseType.SUCCESS, db.getAllBillboards());
+                        sendResponse(oos, response);
+                        break;
                     }
                     case LOG_OUT: {
                         String token = request.getToken();
+                        if (!validSessions.containsKey(token)) {
+                            Response response = new Response(Response.ResponseType.INVALID_TOKEN);
+                            sendResponse(oos, response);
+                            break;
+                        }
                         // expire the token
-                        if(validSessions.containsKey(token)){
+                        if (validSessions.containsKey(token)) {
                             System.out.println("Expired a token of user: " + validSessions.get(token));
                             validSessions.remove(token);
                         }
                         Response response = new Response(Response.ResponseType.SUCCESS,
                                 "Successfully log out!");
-                        sendResponse(oos,response);
+                        sendResponse(oos, response);
                         break;
                     }
                 }

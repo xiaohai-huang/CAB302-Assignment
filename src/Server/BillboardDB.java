@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BillboardDB {
@@ -26,11 +27,12 @@ public class BillboardDB {
             "CREATE TABLE IF NOT EXISTS billboard (\n" +
                     "\tbillboardName VARCHAR(30) UNIQUE NOT NULL,\n" +
                     "    billboardCreator VARCHAR(30) NOT NULL,\n" +
-                    "\tbillboardContent TEXT NOT NULL,\n" +
+                    "\tbillboardContent LONGTEXT NOT NULL,\n" +
                     "\n" +
                     "    PRIMARY KEY (billboardName),\n" +
-                    "    FOREIGN KEY (billboardCreator) REFERENCES user(userName)  ON UPDATE CASCADE\n" +
+                    "    FOREIGN KEY (billboardCreator) REFERENCES user(userName) ON UPDATE CASCADE ON DELETE CASCADE\n" +
                     ");";
+
     private static final String CREATE_SCHEDULING_TABLE =
             "CREATE TABLE IF NOT EXISTS scheduling (\n" +
                     "\tbillboardName VARCHAR(30) NOT NULL,\n" +
@@ -38,8 +40,9 @@ public class BillboardDB {
                     "    endTime DATETIME  NOT NULL ,\n" +
                     "    createdTime DATETIME DEFAULT CURRENT_TIMESTAMP,\n" +
                     "    PRIMARY KEY (billboardName,startTime),\n" +
-                    "    FOREIGN KEY (billboardName) REFERENCES billboard(billboardName) ON UPDATE CASCADE\n" +
+                    "    FOREIGN KEY (billboardName) REFERENCES billboard(billboardName) ON UPDATE CASCADE ON DELETE CASCADE\n" +
                     "    );";
+
     // 1 means exists
     private static final String CHECK_TABLE_EXISTENCE =
             "SELECT count(*) FROM information_schema.TABLES\n" +
@@ -63,7 +66,7 @@ public class BillboardDB {
                     "SET password = ?\n" +
                     "WHERE userName = ?;";
 
-    private static final  String GRANT_PERMISSION =
+    private static final String GRANT_PERMISSION =
             "UPDATE user\n" +
                     "SET permission = TRUE\n" +
                     "WHERE userName = ?;";
@@ -109,6 +112,12 @@ public class BillboardDB {
             "SELECT count(billboardName) AS RowCount FROM billboard\n" +
                     "WHERE billboardName = ?;";
 
+    private static final String GET_ALL_BILLBOARDS =
+            "SELECT billboardName,billboardCreator FROM billboard;";
+
+    private static final String DELETE_BILLBOARD =
+            "DELETE FROM billboard\n" +
+                    "WHERE billboardName = ?;";
 
     private Connection connection;
 
@@ -135,6 +144,10 @@ public class BillboardDB {
     private PreparedStatement currentBillboardXML;
 
     private PreparedStatement hasBillboard;
+
+    private PreparedStatement getAllBillboards;
+
+    private PreparedStatement deleteBillboard;
 
     private Statement statement;
 
@@ -167,7 +180,8 @@ public class BillboardDB {
         scheduleBillboard = connection.prepareStatement(SCHEDULE_BILLBOARD);
         currentBillboardXML = connection.prepareStatement(GET_CURRENT_BILLBOARD_XML);
         hasBillboard = connection.prepareStatement(HAS_BILLBOARD);
-
+        getAllBillboards = connection.prepareStatement(GET_ALL_BILLBOARDS);
+        deleteBillboard = connection.prepareStatement(DELETE_BILLBOARD);
 
 
         // will have effects when fresh start up
@@ -261,9 +275,9 @@ public class BillboardDB {
         addUser(userName, hashedPassword, salt);
     }
 
-    public void removeUser(String userName){
+    public void removeUser(String userName) {
         try {
-            deleteUser.setString(1,userName);
+            deleteUser.setString(1, userName);
             deleteUser.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -272,17 +286,18 @@ public class BillboardDB {
 
     /**
      * Changes the user's password without changing its original salt
+     *
      * @param userName
      * @param newHashedPassword
      */
-    public void changeUserPassword(String userName,String newHashedPassword){
+    public void changeUserPassword(String userName, String newHashedPassword) {
 
         try {
             // get the original salt
             ServerUser serverUser = getUser(userName);
             String salt = serverUser.getSalt();
-            changeUserPassword.setString(1,saltPassword(newHashedPassword,salt));
-            changeUserPassword.setString(2,userName);
+            changeUserPassword.setString(1, saltPassword(newHashedPassword, salt));
+            changeUserPassword.setString(2, userName);
             changeUserPassword.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Falied to change the user's password");
@@ -298,38 +313,40 @@ public class BillboardDB {
         return saltedPassword.equals(realPassword);
     }
 
-    public void grantPermission(String userName, Permission p){
+    public void grantPermission(String userName, Permission p) {
         try {
 
             PreparedStatement grant = connection.prepareStatement(getGrantPermissionSQL(p));
-            grant.setString(1,userName);
+            grant.setString(1, userName);
             grant.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void grantAllPermission(String userName){
-        grantPermission(userName,Permission.CREATE_BILLBOARDS);
-        grantPermission(userName,Permission.EDIT_ALL_BILLBOARDS);
-        grantPermission(userName,Permission.EDIT_USERS);
-        grantPermission(userName,Permission.SCHEDULE_BILLBOARDS);
+    public void grantAllPermission(String userName) {
+        grantPermission(userName, Permission.CREATE_BILLBOARDS);
+        grantPermission(userName, Permission.EDIT_ALL_BILLBOARDS);
+        grantPermission(userName, Permission.EDIT_USERS);
+        grantPermission(userName, Permission.SCHEDULE_BILLBOARDS);
     }
 
-    public void revokePermission(String userName, Permission p){
+    public void revokePermission(String userName, Permission p) {
         try {
             PreparedStatement revoke = connection.prepareStatement(getRevokePermissionSQL(p));
-            revoke.setString(1,userName);
+            revoke.setString(1, userName);
             revoke.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public String getGrantPermissionSQL(Permission p){
-        return GRANT_PERMISSION.replace("permission",p.toString());
+
+    public String getGrantPermissionSQL(Permission p) {
+        return GRANT_PERMISSION.replace("permission", p.toString());
     }
-    public String getRevokePermissionSQL(Permission p){
-        return REVOKE_PERMISSION.replace("permission",p.toString());
+
+    public String getRevokePermissionSQL(Permission p) {
+        return REVOKE_PERMISSION.replace("permission", p.toString());
     }
 
     /**
@@ -355,11 +372,12 @@ public class BillboardDB {
                     rs.getBoolean("edit_all_billboards"),
                     rs.getBoolean("schedule_billboards"),
                     rs.getBoolean("edit_users"));
-        } catch (SQLException ignored) { }
+        } catch (SQLException ignored) {
+        }
         return null;
     }
 
-    public BasicUser getBasicUser(String userName){
+    public BasicUser getBasicUser(String userName) {
         try {
             getUser.setString(1, userName);
             ResultSet rs = getUser.executeQuery();
@@ -385,6 +403,7 @@ public class BillboardDB {
 
     /**
      * Hash a string using SHA-256 algorithm
+     *
      * @param str
      * @return hex representation of the string
      */
@@ -402,11 +421,11 @@ public class BillboardDB {
 
     //---------------billboard table
 
-    public void createBillboard(String billboardName, String billboardCreator, String xml){
+    public void createBillboard(String billboardName, String billboardCreator, String xml) {
         try {
-            createBillboard.setString(1,billboardName);
-            createBillboard.setString(2,billboardCreator);
-            createBillboard.setString(3,xml);
+            createBillboard.setString(1, billboardName);
+            createBillboard.setString(2, billboardCreator);
+            createBillboard.setString(3, xml);
             createBillboard.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to add a new billboard");
@@ -414,9 +433,9 @@ public class BillboardDB {
         }
     }
 
-    public String getBillboardCreatorName(String billboardName){
+    public String getBillboardCreatorName(String billboardName) {
         try {
-            getBillboardCreator.setString(1,billboardName);
+            getBillboardCreator.setString(1, billboardName);
             ResultSet rs = getBillboardCreator.executeQuery();
             rs.next();
             return rs.getString("userName");
@@ -425,11 +444,10 @@ public class BillboardDB {
         }
     }
 
-    public void updateBillboard(String billboardName, String xml)
-    {
+    public void updateBillboard(String billboardName, String xml) {
         try {
-            updateBillboard.setString(1,xml);
-            updateBillboard.setString(2,billboardName);
+            updateBillboard.setString(1, xml);
+            updateBillboard.setString(2, billboardName);
             updateBillboard.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -437,42 +455,64 @@ public class BillboardDB {
 
     }
 
+    public String[][] getAllBillboards() {
+        try {
+            ArrayList<String[]> temp = new ArrayList<>();
+            ResultSet rs = getAllBillboards.executeQuery();
+            while (rs.next()) {
+                String[] row = new String[]{rs.getString("billboardName"),
+                        rs.getString("billboardCreator")};
+                temp.add(row);
+            }
+            String[][] data = new String[temp.size()][2];
+            int i = 0;
+            for (String[] row : temp) {
+                data[i] = row;
+                i++;
+            }
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Schedule a billboard
+     *
      * @param billboardName
-     * @param startTime e.g "2020-05-26 16:20:00"
+     * @param startTime     e.g "2020-05-26 16:20:00"
      * @param endTime
      */
-    public void scheduleBillboard(String billboardName,String startTime, String endTime){
+    public void scheduleBillboard(String billboardName, String startTime, String endTime) {
         try {
-            scheduleBillboard.setString(1,billboardName);
-            scheduleBillboard.setString(2,startTime);
-            scheduleBillboard.setString(3,endTime);
+            scheduleBillboard.setString(1, billboardName);
+            scheduleBillboard.setString(2, startTime);
+            scheduleBillboard.setString(3, endTime);
             scheduleBillboard.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     private final String NOTHING_TO_BE_DISPLAYED =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<billboard>\n" +
-            "    <message>No billboard to be shown yet!</message>\n" +
-            "</billboard>";
+                    "<billboard>\n" +
+                    "    <message>No billboard to be shown yet!</message>\n" +
+                    "</billboard>";
 
 
     /**
      * Gets the current displaying billboard's XML
+     *
      * @return
      */
-    public String getCurrentBillboardXML(){
+    public String getCurrentBillboardXML() {
         try {
             ResultSet rs = currentBillboardXML.executeQuery();
-            if( rs.next())
-            {
+            if (rs.next()) {
                 return rs.getString("billboardContent");
-            }
-            else
-            {
+            } else {
                 return NOTHING_TO_BE_DISPLAYED;
             }
         } catch (SQLException e) {
@@ -481,15 +521,12 @@ public class BillboardDB {
         return null;
     }
 
-    public String getCurrentBillboardName(){
+    public String getCurrentBillboardName() {
         try {
             ResultSet rs = currentBillboardXML.executeQuery();
-            if( rs.next())
-            {
+            if (rs.next()) {
                 return rs.getString("billboardName");
-            }
-            else
-            {
+            } else {
                 return "";
             }
         } catch (SQLException e) {
@@ -500,12 +537,13 @@ public class BillboardDB {
 
     /**
      * Gets the billboard's contents(xml)
+     *
      * @param billboardName
      * @return if billboard does not exists return an empty string ""
      */
-    public String getBillboardXML(String billboardName){
+    public String getBillboardXML(String billboardName) {
         try {
-            getBillboardXML.setString(1,billboardName);
+            getBillboardXML.setString(1, billboardName);
             ResultSet rs = getBillboardXML.executeQuery();
             rs.next();
             return rs.getString("billboardContent");
@@ -514,15 +552,14 @@ public class BillboardDB {
         }
     }
 
-    public boolean hasBillboard(String billboardName){
+    public boolean hasBillboard(String billboardName) {
         try {
-            hasBillboard.setString(1,billboardName);
+            hasBillboard.setString(1, billboardName);
             ResultSet rs = hasBillboard.executeQuery();
             rs.next();
-            if(rs.getInt(1)==1){
+            if (rs.getInt(1) == 1) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         } catch (SQLException e) {
@@ -530,9 +567,18 @@ public class BillboardDB {
         }
     }
 
+    public void deleteBillboard(String billboardName) {
+        try {
+            deleteBillboard.setString(1, billboardName);
+            deleteBillboard.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws SQLException, IOException {
         BillboardDB db = new BillboardDB();
-      db.addUser("xiaohai",hashString("123"));
+        db.addUser("xiaohai", hashString("123"));
 
 
     }

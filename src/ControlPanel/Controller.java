@@ -1,10 +1,14 @@
 package ControlPanel;
 
 import Server.CannotCommunicateWithServerException;
+import Server.InvalidTokenException;
+import Server.PermissionException;
 import Viewer.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -13,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.PropertyResourceBundle;
 
 public class Controller {
 
@@ -79,38 +84,48 @@ public class Controller {
         // main window
 
         // 1. create billboard tab
-        CreateBillboardPanel createBillboardPanel = mainView.getCreateBillboardsPanel();
+        CreateBillboardsPanel createBillboardsPanel = mainView.getCreateBillboardsPanel();
 
         // create billboard button
-        createBillboardPanel.getNewBtn().addActionListener(new ActionListener() {
+        createBillboardsPanel.getNewBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                String xml = createBillboardPanel.getXML();
+                BillboardEditor editor = createBillboardsPanel.getEditor();
+                String xml = editor.getXML();
 
                 // make sure the board has not existed yet
-                String boardName = createBillboardPanel.getBoardName();
-                String billboardContent = model.getBillboardContents(boardName);
+                String boardName = editor.getBoardName();
+                String billboardContent;
+                try {
+                    billboardContent = model.getBillboardContents(boardName);
+                } catch (InvalidTokenException | CannotCommunicateWithServerException ex) {
+                    JOptionPane.showMessageDialog(mainView, ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (billboardContent == null || billboardContent.equals("")) {
                     model.createEditBillboard(boardName, xml);
+                    JOptionPane.showMessageDialog(mainView, "Successfully created a billboard with name '"
+                            + boardName + "' !");
                 } else {
                     JOptionPane.showMessageDialog(mainView, "The billboard with name '" + boardName + "' " +
-                            "has already existed!");
+                            "has already existed!", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
 
         // import xml
-        createBillboardPanel.getImportBtn().addActionListener(new ActionListener() {
+        createBillboardsPanel.getImportBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int o = JOptionPane.showConfirmDialog(mainView, "All unsaved changes will be disposed!");
                 if (o != JOptionPane.OK_OPTION) {
                     return;
                 }
-
+                BillboardEditor editor = createBillboardsPanel.getEditor();
                 // clear the form
-                createBillboardPanel.clearXML();
+                editor.clearXML();
 
                 String fileName;
                 String xml;
@@ -126,17 +141,17 @@ public class Controller {
                 }
 
                 // populates the form
-                createBillboardPanel.setXML(xml);
+                editor.setXML(xml);
                 // use the file name to set the billboard name
-                createBillboardPanel.setBoardName(fileName.split("\\.")[0]);
+                editor.setBoardName(fileName.split("\\.")[0]);
             }
         });
 
         // export xml
-        createBillboardPanel.getExportBtn().addActionListener(new ActionListener() {
+        createBillboardsPanel.getExportBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String xml = createBillboardPanel.getXML();
+                String xml = createBillboardsPanel.getEditor().getXML();
 
                 JFileChooser fileChooser = new JFileChooser();
                 int option = fileChooser.showSaveDialog(mainView);
@@ -152,90 +167,179 @@ public class Controller {
         });
 
         // preview button
-        createBillboardPanel.getPreviewBtn().addActionListener(new ActionListener() {
+        createBillboardsPanel.getPreviewBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String xml = createBillboardPanel.getXML();
+                String xml = createBillboardsPanel.getEditor().getXML();
                 Viewer previewer = new Viewer();
                 previewer.updatePanel(xml);
             }
         });
 
-        // edit message content button
-        createBillboardPanel.getEditMessageContentBtn().addActionListener(new ActionListener() {
+        // 2. list billboard tab
+        ListBillboardsPanel listBillboardsPanel = mainView.getListBillboardsPanel();
+
+        // load billboards button
+        listBillboardsPanel.getLoadBillboardsBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SmallEditor editor = new SmallEditor("Message Editor", createBillboardPanel.getMessageContent());
-                editor.getSaveBtn().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        createBillboardPanel.setMessageContent(editor.getUserInput());
-                    }
-                });
-            }
-        });
-
-        // edit picture source button
-        createBillboardPanel.getEditPictureContentBtn().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // get picture from a URL
-                if (createBillboardPanel.getUrlBtn().isSelected()) {
-                    String userInput = JOptionPane.showInputDialog("Input the URL of the image");
-                    createBillboardPanel.setPictureContent(userInput);
-                }
-                else {// get picture from base 64 string or a local image file
-                    int o = JOptionPane.showConfirmDialog(mainView, "Select the image from local files?",
-                            "Edit Picture Content",JOptionPane.YES_NO_OPTION);
-
-                    if (o == JOptionPane.OK_OPTION) {// get from local image file
-                        // loads the image from a local file
-                        JFileChooser chooser = new JFileChooser();
-                        int option = chooser.showOpenDialog(mainView);
-                        if (option == JFileChooser.APPROVE_OPTION) {
-                            File file = chooser.getSelectedFile();
-                            BufferedImage image = null;
-                            try {
-                                image = ImageIO.read(file);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                            // encode the image to a base 64 string
-
-                            createBillboardPanel.setPictureContent(Viewer.encodeImage(image));
-                        }
-                    } else if(o==JOptionPane.NO_OPTION) {// from a base 64 string
-                        String userInput = JOptionPane.showInputDialog("Input a base 64 string");
-                        createBillboardPanel.setPictureContent(userInput);
+                JButton editBtn = listBillboardsPanel.getEditBtn();
+                if (editBtn.getText().equals("Save Changes")) {
+                    int o = JOptionPane.showConfirmDialog(mainView, "All unsaved changes will be disposed!",
+                            "Discard changes", JOptionPane.YES_NO_OPTION);
+                    if (o == JOptionPane.NO_OPTION) {
+                        return;
+                    } else {
+                        // turn it back to normal mode
+                        editBtn.setText("Edit");
                     }
                 }
+                String[][] data;
+                try {
+                    data = model.getBillboards();
+                } catch (InvalidTokenException | CannotCommunicateWithServerException ex) {
+                    JOptionPane.showMessageDialog(mainView, ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                final String[] columns = {"Board Name", "Creator"};
+                JPanel displayPanel = listBillboardsPanel.getDisplayPanel();
+                CardLayout card = listBillboardsPanel.getCard();
+                JTable table = listBillboardsPanel.getTable();
+
+                table.setModel(new DefaultTableModel(data, columns));
+                // select the first row
+                table.setRowSelectionInterval(0, 0);
+                card.show(displayPanel, "list");
+
             }
         });
 
-        // edit info content button
-        createBillboardPanel.getEditInfoBtn().addActionListener(new ActionListener() {
+        // preview button
+        listBillboardsPanel.getPreviewBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SmallEditor editor = new SmallEditor("Information Content Editor",createBillboardPanel.getInfoContent());
-                editor.getSaveBtn().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        createBillboardPanel.setInfoContent(editor.getUserInput());
-                    }
-                });
+                JTable table = listBillboardsPanel.getTable();
+                // make sure the user has selected a billboard
+                int rowIndex = table.getSelectedRow();
+                String selectedBoardName;
+                if (rowIndex != -1) {
+                    // select the first row
+                    table.setRowSelectionInterval(0, 0);
+                    selectedBoardName = (String) table.getValueAt(rowIndex, 0);
+                } else {
+                    JOptionPane.showMessageDialog(mainView, "Please select a billboard!");
+                    return;
+                }
+
+                String xml = model.getBillboardContents(selectedBoardName);
+                ;
+                Viewer previewer = new Viewer();
+                previewer.updatePanel(xml);
             }
         });
+
+        // edit button
+        listBillboardsPanel.getEditBtn().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton source = listBillboardsPanel.getEditBtn();
+                JTable table = listBillboardsPanel.getTable();
+                BillboardEditor editor = listBillboardsPanel.getEditor();
+
+                if (source.getText().equals("Save Changes"))// user has finished the editing
+                {
+                    // make the changes to the billboard on database
+                    try {
+                        model.createEditBillboard(editor.getBoardName(), editor.getXML());
+                        JOptionPane.showMessageDialog(mainView, "Successfully edit the billboard!");
+                    } catch (PermissionException ex) {
+                        JOptionPane.showMessageDialog(mainView, ex.getMessage(), "Permission required",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                    source.setText("Edit");
+                    // make the display panel to show billboard list
+                    CardLayout card = listBillboardsPanel.getCard();
+                    JPanel displayPanel = listBillboardsPanel.getDisplayPanel();
+                    card.show(displayPanel, "list");
+                    return;
+                }
+
+                // make sure the user has selected a billboard
+                // and enter editor mode
+                int rowIndex = table.getSelectedRow();
+                String selectedBoardName = "";
+                if (rowIndex != -1) {
+                    table.clearSelection();
+                    selectedBoardName = (String) table.getValueAt(rowIndex, 0);
+                    String xml = model.getBillboardContents(selectedBoardName);
+                    source.setText("Save Changes");
+
+                    // make sure the editor is clean before populating
+                    editor.clearXML();
+
+                    // populates the form
+                    editor.setXML(xml);
+                    editor.setBoardName(selectedBoardName);
+
+                    // make the display panel to show editor
+                    CardLayout card = listBillboardsPanel.getCard();
+                    JPanel displayPanel = listBillboardsPanel.getDisplayPanel();
+                    card.show(displayPanel, "editor");
+
+
+                } else {
+                    JOptionPane.showMessageDialog(mainView, "Please select a billboard!");
+                }
+            }
+        });
+
+        // delete button
+        listBillboardsPanel.getDeleteBtn().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable table = listBillboardsPanel.getTable();
+                // make sure the user has selected a billboard
+                int rowIndex = table.getSelectedRow();
+                String selectedBoardName = "";
+                if (rowIndex != -1) {
+                    table.clearSelection();
+                    selectedBoardName = (String) table.getValueAt(rowIndex, 0);
+                } else {
+                    JOptionPane.showMessageDialog(mainView, "Please select a billboard!");
+                    return;
+                }
+                try {
+                    if (model.deleteBillboard(selectedBoardName)) {
+                        JOptionPane.showMessageDialog(mainView, "Successfully deleted the billboard!" +
+                                " Please reload the billboard list to see the change!");
+
+                    } else {
+                        JOptionPane.showMessageDialog(mainView, "Fail to delete the billboard", "Warning",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (CannotCommunicateWithServerException | InvalidTokenException ex) {
+                    JOptionPane.showMessageDialog(mainView, ex.getMessage());
+                }
+
+            }
+        });
+
         // 5. log out tab
         mainView.getLogoutPanel().getLogoutBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String acknowledgement;
+                String acknowledgement = null;
                 try {
                     acknowledgement = model.logout();
                 } catch (CannotCommunicateWithServerException ex) {
                     JOptionPane.showMessageDialog(mainView, ex.getMessage());
                     return;
+                } catch (InvalidTokenException ex) {
+                    JOptionPane.showMessageDialog(mainView, ex.getMessage());
+                    System.exit(1);
                 }
+
                 JOptionPane.showMessageDialog(mainView, acknowledgement);
                 if (!acknowledgement.equals("Fail to logout")) {
                     System.exit(1);

@@ -7,10 +7,11 @@ public class Response implements Serializable {
     private Object responseContent;
 
 
-    public enum ResponseType{
+    public enum ResponseType {
         SUCCESS,
         FAIL,//include authentication failure
-        ERROR
+        ERROR,
+        INVALID_TOKEN
     }
     public Response(ResponseType type, Object responseContent){
         this.responseType = type;

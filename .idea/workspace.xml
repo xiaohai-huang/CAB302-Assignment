@@ -2,24 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d15aff75-b770-43f2-a928-503fa9151f5c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanelMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanelView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/Controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/LoginView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/Model.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControlPanel/View.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Server/CannotCommunicateWithServerException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Server/TokenExpireException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Test/ControlPanel/ControlPanelTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Server/PermissionException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanelUI.form" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanelUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/ControlPanelView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/ControlPanelView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlPanel/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlPanel/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/BillboardDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/BillboardDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Response.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Server/ViewerRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Viewer/Viewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Viewer/Viewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Server/TokenExpireException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server/InvalidTokenException.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +60,19 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.ControlPanelMain">
+    <configuration name="BillboardDB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Server.BillboardDB" />
+      <module name="CAB302" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ControlPanel" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ControlPanel.ControlPanel" />
       <module name="CAB302" />
@@ -120,33 +125,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Viewer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Viewer.Viewer" />
-      <module name="CAB302" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Viewer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Application.ControlPanel" />
-      <item itemvalue="Application.Server" />
-      <item itemvalue="Application.Viewer" />
-      <item itemvalue="Application.LoginView" />
+      <item itemvalue="Application.BillboardDB" />
       <item itemvalue="Application.ControlPanelMain" />
+      <item itemvalue="Application.ControlPanel" />
+      <item itemvalue="Application.LoginView" />
+      <item itemvalue="Application.Server" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.ControlPanelMain" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.BillboardDB" />
         <item itemvalue="Application.ControlPanel" />
         <item itemvalue="Application.LoginView" />
-        <item itemvalue="Application.Viewer" />
       </list>
     </recent_temporary>
   </component>
@@ -259,7 +251,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590677705634</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="convert to MVC">
+      <created>1592192370138</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1592192370138</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -288,24 +287,26 @@
     <MESSAGE value="successfully connect viewer with server" />
     <MESSAGE value="partially finish create billboard tab (left improt XML)" />
     <MESSAGE value="finished create billboard tab" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished create billboard tab" />
+    <MESSAGE value="convert to MVC" />
+    <option name="LAST_COMMIT_MESSAGE" value="convert to MVC" />
   </component>
   <component name="WindowStateProjectService">
     <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser" timestamp="1590585794663">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="121" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1590585794663" />
-    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590547965792">
+    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1592197447646">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1590547965792" />
-    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1592192345505">
+    <state x="310" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1592197447646" />
+    <state x="424" y="6" key="CommitChangelistDialog2" timestamp="1592192368424">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1592192345505" />
-    <state width="478" height="466" key="DebuggerActiveHint" timestamp="1590725130217">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="424" y="6" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1592192368424" />
+    <state width="420" height="385" key="DebuggerActiveHint" timestamp="1592314769940">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
+    <state width="420" height="385" key="DebuggerActiveHint/0.0.1280.680@0.0.1280.680" timestamp="1592314769940" />
     <state width="478" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1590725130217" />
     <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1590138735249">
       <screen x="0" y="0" width="1536" height="824" />
@@ -315,42 +316,50 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="473" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591165278592" />
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom" timestamp="1592192302663">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="128" key="GridCell.Tab.0.bottom" timestamp="1592318680821">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
+    <state width="1237" height="128" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1592318680821" />
+    <state width="1493" height="128" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592276509595" />
     <state width="1877" height="210" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.center" timestamp="1592192302663">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="128" key="GridCell.Tab.0.center" timestamp="1592318680821">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
+    <state width="1237" height="128" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1592318680821" />
+    <state width="1493" height="128" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1592276509593" />
     <state width="1877" height="210" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="130" key="GridCell.Tab.0.left" timestamp="1592192302663">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="128" key="GridCell.Tab.0.left" timestamp="1592318680821">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
+    <state width="1237" height="128" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1592318680821" />
+    <state width="1493" height="128" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1592276509593" />
     <state width="1877" height="210" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779747" />
-    <state width="1493" height="130" key="GridCell.Tab.0.right" timestamp="1592192302663">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="128" key="GridCell.Tab.0.right" timestamp="1592318680821">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="130" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1592192302663" />
+    <state width="1237" height="128" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1592318680821" />
+    <state width="1493" height="128" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1592276509594" />
     <state width="1877" height="210" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590115779748" />
-    <state width="1493" height="260" key="GridCell.Tab.1.bottom" timestamp="1592134756767">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="203" key="GridCell.Tab.1.bottom" timestamp="1592317369022">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
-    <state width="1493" height="260" key="GridCell.Tab.1.center" timestamp="1592134756767">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="203" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1592317369022" />
+    <state width="1493" height="260" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592216720245" />
+    <state width="1237" height="203" key="GridCell.Tab.1.center" timestamp="1592317369022">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
-    <state width="1493" height="260" key="GridCell.Tab.1.left" timestamp="1592134756767">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="203" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1592317369022" />
+    <state width="1493" height="260" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1592216720245" />
+    <state width="1237" height="203" key="GridCell.Tab.1.left" timestamp="1592317369022">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
-    <state width="1493" height="260" key="GridCell.Tab.1.right" timestamp="1592134756767">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state width="1237" height="203" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1592317369022" />
+    <state width="1493" height="260" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1592216720245" />
+    <state width="1237" height="203" key="GridCell.Tab.1.right" timestamp="1592317369022">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1493" height="260" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1592134756767" />
+    <state width="1237" height="203" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1592317369022" />
+    <state width="1493" height="260" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1592216720245" />
     <state x="249" y="0" key="SettingsEditor" timestamp="1590459471462">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -379,20 +388,35 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="209" y="32" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1591165280629" />
-    <state x="425" y="187" key="run.anything.popup" timestamp="1592187805059">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="348" y="0" key="refactoring.ChangeSignatureDialog" timestamp="1592315165210">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
+    <state x="348" y="0" key="refactoring.ChangeSignatureDialog/0.0.1280.680@0.0.1280.680" timestamp="1592315165210" />
+    <state x="354" y="154" key="run.anything.popup" timestamp="1592293017479">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="354" y="154" key="run.anything.popup/0.0.1280.680@0.0.1280.680" timestamp="1592293017479" />
     <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1592187805059" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1590677717817">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="359" y="120" width="672" height="560" key="search.everywhere.popup" timestamp="1592315287640">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1590677717817" />
+    <state x="359" y="120" width="672" height="560" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1592315287640" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1592276498227" />
   </component>
   <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="loginView.getExitBtn()" language="JAVA" />
-      </configuration>
-    </watches-manager>
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Server/Server.java</url>
+          <line>289</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/ControlPanel/Controller.java</url>
+          <line>246</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
