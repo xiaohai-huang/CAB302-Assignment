@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<billboard background="#e6103e">
+    <message>Basic message-only billboard</message>
+</billboard>
