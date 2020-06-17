@@ -1,7 +1,7 @@
 package Test.Viewer;
 import static org.junit.jupiter.api.Assertions.*;
 
-import Viewer.BillboardXML;
+import Common.BillboardXML;
 import org.junit.jupiter.api.*;
 public class ViewerTests {
 

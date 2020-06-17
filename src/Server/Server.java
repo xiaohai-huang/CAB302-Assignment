@@ -1,11 +1,10 @@
 package Server;
 
-import ControlPanel.BasicUser;
-import ControlPanel.Permission;
-import ControlPanel.ServerUser;
-import Viewer.ServerConnection;
+import Common.BasicUser;
+import Common.Permission;
+import Common.ServerUser;
+import Common.ServerConnection;
 
-import javax.swing.text.StyledEditorKit;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;

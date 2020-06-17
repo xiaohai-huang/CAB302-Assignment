@@ -1,4 +1,4 @@
-package Server;
+package Common;
 
 
 public class PermissionException extends RuntimeException {

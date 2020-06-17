@@ -1,23 +1,22 @@
 package ControlPanel;
 
-import Server.CannotCommunicateWithServerException;
-import Server.InvalidTokenException;
-import Server.PermissionException;
+import Common.CannotCommunicateWithServerException;
+import Common.InvalidTokenException;
+import Common.Permission;
+import Common.PermissionException;
 import Viewer.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.PropertyResourceBundle;
+
+import static Common.Utility.ReadTextFile;
 
 public class Controller {
 
@@ -135,7 +134,7 @@ public class Controller {
                 if (option == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
                     fileName = file.getName();
-                    xml = Viewer.ReadTextFile(file.getPath());
+                    xml = ReadTextFile(file.getPath());
                 } else {
                     return;
                 }

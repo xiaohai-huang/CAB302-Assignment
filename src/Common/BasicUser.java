@@ -1,4 +1,4 @@
-package ControlPanel;
+package Common;
 
 import java.io.Serializable;
 import java.util.HashMap;

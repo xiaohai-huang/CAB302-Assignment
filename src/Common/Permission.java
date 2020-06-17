@@ -1,4 +1,4 @@
-package ControlPanel;
+package Common;
 
 public enum Permission {
     CREATE_BILLBOARDS,

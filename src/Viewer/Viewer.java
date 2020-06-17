@@ -1,6 +1,8 @@
 package Viewer;
 
 
+import Common.BillboardXML;
+import Common.ServerConnection;
 import Server.Request;
 import Server.Response;
 
@@ -10,11 +12,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.Base64;
+
+import static Common.Utility.decodeImage;
+
 
 public class Viewer {
     public JFrame viewer;
@@ -164,57 +167,7 @@ public class Viewer {
     }
 
 
-    // from https://grokonez.com/java/java-advanced/java-8-encode-decode-an-image-base64
-    public static String encodeImage(BufferedImage image) {
-        String base64Image = "";
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "jpg", bos);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] data = bos.toByteArray();
 
-        base64Image = Base64.getEncoder().encodeToString(data);
-
-        return base64Image;
-    }
-
-    public static BufferedImage decodeImage(String base64Image) {
-        // Converting a Base64 String into Image byte array
-        byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
-        ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(bis);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return image;
-    }
-
-    public static String ReadTextFile(String filePath) {
-        String everything = null;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            everything = sb.toString();
-            br.close();
-
-        } catch (IOException e) {
-            System.out.println("IO exception!");
-        }
-        return everything;
-    }
 
     public static String getERROR_IMAGE() {
         return ERROR_IMAGE;
@@ -243,11 +196,11 @@ class DisplayPanel extends JPanel {
                 try {
                     image = ImageIO.read(new URL(XML.getPictureURL()));
                 } catch (IOException e) {
-                    image = Viewer.decodeImage(Viewer.getERROR_IMAGE());
+                    image = decodeImage(Viewer.getERROR_IMAGE());
                     //e.printStackTrace();
                 }
             } else { // loads base 64 image
-                image = Viewer.decodeImage(XML.getPictureData());
+                image = decodeImage(XML.getPictureData());
             }
         }
 
@@ -494,10 +447,10 @@ class DisplayPanel extends JPanel {
                 try {
                     image = ImageIO.read(new URL(XML.getPictureURL()));
                 } catch (IOException e) {
-                    image = Viewer.decodeImage(Viewer.getERROR_IMAGE());// display error image
+                    image = decodeImage(Viewer.getERROR_IMAGE());// display error image
                 }
             } else { // loads base 64 image
-                image = Viewer.decodeImage(XML.getPictureData());
+                image = decodeImage(XML.getPictureData());
             }
         }
 

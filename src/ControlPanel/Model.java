@@ -1,7 +1,7 @@
 package ControlPanel;
 
+import Common.*;
 import Server.*;
-import Viewer.ServerConnection;
 
 import java.io.*;
 import java.net.Socket;
@@ -148,58 +148,5 @@ public class Model {
         return null;
     }
 
-    public static String createBillboardXML(String billboardColour,
-                                      String msg, String msgColour,
-                                      String pic, String picType,
-                                      String info, String infoColour) {
-        String template =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                        "<billboard bg>\n" +
-                        "msg\n" +
-                        "pic\n" +
-                        "info\n" +
-                        "</billboard>";
-        String msgTag = "";
-        String picTag = "";
-        String infoTag = "";
 
-        // replace bg colour
-        if (!billboardColour.isBlank()) {
-            template = template.replace("bg", "background=\"" + billboardColour + "\"");
-        }
-
-
-        if (!msg.isBlank()) {
-            msgTag = createXMLTag("message", "colour", msgColour, msg);
-        }
-        if (!pic.isBlank()) {
-            if (picType.toLowerCase().equals("url")) {// handle cases
-                picTag = String.format("<picture url=\"%s\" />", pic);
-            } else {
-                picTag = String.format("<picture data=\"%s\" />", pic);
-            }
-        }
-        if (!info.isBlank()) {
-            infoTag = createXMLTag("information", "colour", infoColour, info);
-        }
-
-        template = template.replace("bg", "");
-        template = template.replace("msg", msgTag);
-        template = template.replace("pic", picTag);
-        template = template.replace("info", infoTag);
-
-        return template;
-    }
-
-    private static String createXMLTag(String tagName,
-                                       String attributeName, String attributeValue,
-                                       String text) {
-        String xml = "";
-        if (!attributeValue.isBlank()) {
-            xml = String.format("<%s %s=\"%s\">%s</%s>", tagName, attributeName, attributeValue, text, tagName);
-        } else {
-            xml = String.format("<%s>%s</%s>", tagName, text, tagName);
-        }
-        return xml;
-    }
 }

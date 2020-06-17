@@ -1,6 +1,6 @@
 package ControlPanel;
 
-import Viewer.BillboardXML;
+import Common.BillboardXML;
 import Viewer.Viewer;
 
 import javax.imageio.ImageIO;
@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static ControlPanel.Model.createBillboardXML;
+import static Common.Utility.createBillboardXML;
+import static Common.Utility.encodeImage;
 
 public class ControlPanelView extends JFrame {
 
@@ -412,7 +413,7 @@ class BillboardEditor extends JPanel {
                                 ex.printStackTrace();
                             }
                             // encode the image to a base 64 string
-                            pictureContent = Viewer.encodeImage(image);
+                            pictureContent = encodeImage(image);
                         }
                     } else if (o == JOptionPane.NO_OPTION) {// from a base 64 string
                         String userInput = JOptionPane.showInputDialog("Input a base 64 string");

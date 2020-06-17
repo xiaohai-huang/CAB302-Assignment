@@ -1,4 +1,4 @@
-package Server;
+package Common;
 
 public class InvalidTokenException extends RuntimeException {
     public InvalidTokenException() {

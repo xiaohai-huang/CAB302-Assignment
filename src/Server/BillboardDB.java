@@ -1,8 +1,8 @@
 package Server;
 
-import ControlPanel.BasicUser;
-import ControlPanel.Permission;
-import ControlPanel.ServerUser;
+import Common.BasicUser;
+import Common.Permission;
+import Common.ServerUser;
 
 import java.io.IOException;
 import java.security.MessageDigest;
